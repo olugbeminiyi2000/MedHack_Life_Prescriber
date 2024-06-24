@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drug Info Recorded</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Poppins", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-message h1 {
+            color: #4CAF50;
+        }
+
+        .success-message p {
+            color: #333;
+            font-size: 18px;
+        }
+    </style>
+    <script>
+        // JavaScript function to redirect after 5 seconds
+        function redirectAfterTimeout() {
+            setTimeout(function () {
+                window.location.href = "{% url 'prescription:prescribe' %}";
+            }, 5000); // 5000 milliseconds = 5 seconds
+        }
+    </script>
+</head>
+
+<body onload="redirectAfterTimeout()">
+    <div class="container">
+        <div class="success-message">
+            <h1>Success!</h1>
+            <p>Drug info has been recorded successfully.</p>
+        </div>
+    </div>
+</body>
+
+</html>

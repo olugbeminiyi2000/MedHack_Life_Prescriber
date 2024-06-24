@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <main>
+        {% if any_error %}
+        <div>
+            {{any_error}}
+        </div>
+        {% endif %}
+        {% if success_message %}
+        <div>
+            {{success_message}}
+        </div>
+        {% endif %}
+        <div>
+            <form method="post" action="">
+                {% csrf_token %}
+                <div>
+                    <div class="form-group">
+                        {{patient_form.username.label_tag}}
+                        {{patient_form.username}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.drug_name.label_tag}}
+                        {{prescribe_form.drug_name}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.prescribe_time.label_tag}}
+                        {{prescribe_form.prescribe_time}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.total_tablets.label_tag}}
+                        {{prescribe_form.total_tablets}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.no_of_times_per_day.label_tag}}
+                        {{prescribe_form.no_of_times_per_day}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.no_of_tablets_per_use.label_tag}}
+                        {{prescribe_form.no_of_tablets_per_use}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.general_description.label_tag}}
+                        {{prescribe_form.general_description}}
+                    </div>
+                </div>
+                <div>
+                    <button type="submit">Submit</button>
+                </div>
+            </form>
+            <button type="button">
+                <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;">back to home</a>
+            </button>
+        </div>
+    </main>
+</body>
+
+</html>

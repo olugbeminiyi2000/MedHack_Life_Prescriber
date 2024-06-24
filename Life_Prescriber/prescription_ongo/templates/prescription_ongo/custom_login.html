@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <title>Clinic User Secure Login</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static './styles/custom_login.css' %}" />
+    <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}" />
+</head>
+
+<body>
+    {% load crispy_forms_tags %}
+    {% include 'prescription_ongo/messages.html' %}
+    {% if error_message %}
+    <div class="Error">
+        <p>{{ error_message }}</p>
+    </div>
+    {% endif %}
+    <div class="container">
+        <div class="img-form">
+            <img src="{% static './images/loading1.png' %}" alt="health" class="img" />
+        </div>
+        <div class="form-container">
+            {% load crispy_forms_tags %}
+            <div>
+                <h1 class="form-h1">Secure Login</h1>
+            </div>
+            <form method="post" action="{% url 'prescription:custom_login' %}">
+                {% csrf_token %}
+                {{ custom_login_form|crispy }}
+                <p>
+                    <label style="display: none" for="custom_signin"></label>
+                    <input style="display: none" id="custom_signin" type="submit" name="custom_signin" value="signin" />
+                </p>
+                <p>
+                    <button id="signin_custom" type="button">Login</button>
+                </p>
+            </form>
+            <div>
+                <div class="forget">
+                    <a href="{% url 'prescription:custom_password_reset' %}">
+                        forgot password ?
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    const CustomButton = document.querySelector("#signin_custom");
+    const CustomSubmit = document.querySelector("#custom_signin");
+
+    CustomSubmit.addEventListener("click", () => {
+        console.log("submitting custom sigup data...");
+    });
+    CustomButton.addEventListener("click", () => {
+        CustomSubmit.click();
+    });
+</script>
+
+</html>

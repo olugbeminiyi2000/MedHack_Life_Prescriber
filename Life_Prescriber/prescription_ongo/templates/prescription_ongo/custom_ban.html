@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <title>Clinic User Ban: Not allowed!!!</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
+        <link rel="stylesheet" href="{% static './styles/custom_ban.css' %}">
+    </head>
+    <body>
+        <section class="error">
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+        </section>
+        <section class="blocked-section">
+            <div class="blocked">
+                <h1>You have been blocked from accessing this page.</h1>
+            </div>
+        </section>
+    </body>
+</html>

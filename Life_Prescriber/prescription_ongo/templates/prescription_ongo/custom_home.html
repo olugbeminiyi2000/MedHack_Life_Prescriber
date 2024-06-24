@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% load static %}
+        <title>Health Practitioner Page</title>
+        <meta charset="utf-8">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
+        <link rel="stylesheet" href="{% static './styles/custom_home.css' %}">
+    </head>
+    <body>
+        <main>
+            {% include 'prescription_ongo/messages.html' %}
+            <div class="main-div">
+                <h1>Welcome to the Custom Health Practitioner Page</h1>
+                <p class="Practitioner">Hello, Health Practitioner, {{ custom_logged_user.first_name }} {{ custom_logged_user.last_name }}</p>
+            </div>
+        </main>
+        <nav>
+            <div class="">
+                <img src="{% static './images/loading2.png' %}" alt="health" class="logo">
+            </div>
+        </nav>
+        <section class="checking">
+            <div class="grid">
+                <div class="">
+                    <a href="{% url 'prescription:prescribe' %}" class="">Make prescription</a>
+                </div>
+                <div class="">
+                    <a href="{% url 'prescription:custom_logout' %}" class="">Log out</a>
+                </div>
+            </div>
+        </section>
+    </body>
+</html>
