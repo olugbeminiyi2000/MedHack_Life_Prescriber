@@ -162,3 +162,4 @@ EMAIL_PORT = 587
 # extended the Abstract User Class to create my own User Model(Patient) and not use
 # the deafult user model called User.
 AUTH_USER_MODEL = "prescription_ongo.Patient"
+
