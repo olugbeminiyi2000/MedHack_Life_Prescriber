@@ -71,6 +71,8 @@ class ClinicUser(AbstractUser):
     first_name = models.CharField(max_length=300, blank=False)
     last_name = models.CharField(max_length=300, blank=False)
     email = models.EmailField(blank=False, unique=True)
+    designation = models.CharField(max_length=300, null=True)
+    medical_institution = models.CharField(max_length=500, null=True)
 
     # Define groups and user_permissions with unique related_name arguments
     groups = models.ManyToManyField('auth.Group', related_name='clinic_user_groups')
