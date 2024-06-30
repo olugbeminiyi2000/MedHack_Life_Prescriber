@@ -42,6 +42,11 @@ class Patient(AbstractUser):
     def __str__(self):
         return ("<{0}> class, middle_name <{1}>, phone number <{2}>".format(self.__class__.__name__, self.middle_name, self.phone_number)).capitalize()
     
+    class Meta:
+        verbose_name = "Patient"
+        verbose_name_plural = "Patients"
+
+    
 
 class Prescribe(models.Model):
     prescribed_user = models.ForeignKey(
@@ -77,3 +82,7 @@ class ClinicUser(AbstractUser):
     # Define groups and user_permissions with unique related_name arguments
     groups = models.ManyToManyField('auth.Group', related_name='clinic_user_groups')
     user_permissions = models.ManyToManyField('auth.Permission', related_name='clinic_user_permissions')
+
+    class Meta:
+        verbose_name = "Clinic User"
+        verbose_name_plural = "Clinic Users"

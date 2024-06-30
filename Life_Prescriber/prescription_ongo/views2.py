@@ -107,7 +107,8 @@ class CustomLogin(View):
                 before you redirect custom_home add cookies to it.
                 session cookies, and time period cookies.
                 """
-                response = redirect(reverse("prescription:custom_home"))
+                # response = redirect(reverse("prescription:custom_home"))
+                response = redirect("/site/home.html")
 
                 # set seesion cookie that will expire if browser is closed
                 response.set_cookie("custom_session", "session_cookie", max_age=None)
