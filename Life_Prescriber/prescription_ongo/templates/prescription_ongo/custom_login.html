@@ -6,7 +6,7 @@
     <title>Clinic User Secure Login</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="{% static './styles/custom_login.css' %}" />
     <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}" />
 </head>
@@ -20,32 +20,30 @@
     </div>
     {% endif %}
     <div class="container">
-        <div class="img-form">
-            <img src="{% static './images/loading1.png' %}" alt="health" class="img" />
-        </div>
         <div class="form-container">
             {% load crispy_forms_tags %}
-            <div>
-                <h1 class="form-h1">Secure Login</h1>
+            <div class="form-elements">
+                <h1 class="form-h1">Log In</h1>
             </div>
-            <form method="post" action="{% url 'prescription:custom_login' %}">
+            <div class="form-elements">
+                <h2>Welcome to <span>Life Prescriber™</span></h2>
+            </div>
+            <form class="form-elements" method="post" action="{% url 'prescription:custom_login' %}">
                 {% csrf_token %}
                 {{ custom_login_form|crispy }}
+                <p id="forgot-password">
+                    <a href="{% url 'prescription:custom_password_reset' %}">
+                        Forgot password?
+                    </a>
+                </p>
                 <p>
                     <label style="display: none" for="custom_signin"></label>
                     <input style="display: none" id="custom_signin" type="submit" name="custom_signin" value="signin" />
                 </p>
-                <p>
-                    <button id="signin_custom" type="button">Login</button>
+                <p id="signin-button">
+                    <button id="signin_custom" type="button">Log In</button>
                 </p>
             </form>
-            <div>
-                <div class="forget">
-                    <a href="{% url 'prescription:custom_password_reset' %}">
-                        forgot password ?
-                    </a>
-                </div>
-            </div>
         </div>
     </div>
 </body>
