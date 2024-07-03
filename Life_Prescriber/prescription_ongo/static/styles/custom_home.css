@@ -31,7 +31,7 @@ main {
     align-items: center;
     height: 150px;
     width: 400px;
-    margin-top: 90px;
+    margin-top: 20px;
     background-color: #c4d3e8;
     border-radius: 10px;
 }
@@ -171,12 +171,15 @@ main {
 
 
 
-
 /* Message styling */
 .messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 80px;
     background-color: #d6ffcd;
     width:100%;
     text-align: center;
     border-radius: 27px;
+    margin-bottom: 15px;
 }
