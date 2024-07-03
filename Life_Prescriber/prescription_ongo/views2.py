@@ -100,7 +100,7 @@ class CustomLogin(View):
                 # log the custom user in
                 login(request, authenticate_user)
                 # display a flash message for successful login
-                messages.success(request, "CustomUser logged in...")
+                messages.success(request, "CustomUser logged in...😎")
                 
                 # TODO: make sure you do what is in the docstring
                 """
@@ -136,7 +136,7 @@ class CustomLogout(View):
         # logout the current user using logout(request) function
         logout(request)
         # add a flash message to the login file to indicate login succesful
-        messages.success(request, "CustomUser successfully logged out :)")
+        messages.success(request, "CustomUser successfully logged out 😎")
         # then redirect success page i.e out custom login
         return redirect(reverse("prescription:custom_login"))
 

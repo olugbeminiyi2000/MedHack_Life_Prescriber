@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+* {
+    font-family: "League Spartan", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #fefefeef;
+    min-height: 75vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-elements {
+    margin: 50px 0px 50px 0px;
+}
+
+.form-h1 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 60px;
+    color: rgb(4 102 238);
+}
+
+.form-elements h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: 300;
+}
+
+.form-elements span {
+    color: rgb(4 102 238);
+}
+
+input {
+    background: #c4d3e8;
+    min-width: 87%;
+    max-width: 87%;
+    height: 35px;
+    font-size: 1.5rem;
+    border: 1px solid rgb(196, 211, 232);
+    border-radius: 10px;
+    outline: none;
+    margin-top: 7px;
+    padding: 1px 5px;
+}
+
+input:focus {
+    border: 1px solid rgb(4 102 238);
+}
+
+.mb-3 {
+    font-size: 1.5rem;
+    margin-left: 31px;
+}
+
+#div_id_username_or_email {
+    margin-bottom: 20px;
+}
+
+#div_id_password.mb-3 {
+    padding-bottom: 10px;
+}
+
+#forgot-password {
+    text-align: center;
+}
+
+#forgot-password a {
+    text-decoration: none;
+    color: black;
+}
+
+#signin_custom {
+    height: 40px;
+    width: 35%;
+    margin-top: 32px;
+    border: 1px solid rgb(4 102 238);
+    border-radius: 15px;
+    background: rgb(4 102 238);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: beige;
+}
+
+#signin-button {
+    text-align: center;
+}
+
+
+/* Message styling */
+.messages {
+    height: 80px;
+    background-color: #d6ffcd;
+    width:100%;
+    text-align: center;
+    border-radius: 27px;
+}
+
+.alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: inherit;
+}
+
+/* .font-bold {
+    margin-right: 4px;
+} */

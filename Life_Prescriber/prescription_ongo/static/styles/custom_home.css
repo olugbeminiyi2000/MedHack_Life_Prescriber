@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "League Spartan", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+ body {
+    background-color: #fefefeef;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5rem;
+    /* background-color: #2260ff; */
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.personal-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 150px;
+    width: 400px;
+    margin-top: 20px;
+    background-color: #c4d3e8;
+    border-radius: 10px;
+}
+
+#wel-icon {
+    display: flex;
+    flex: 3;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+#icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1.2px solid royalblue;
+    border-radius: 50%;
+    color: royalblue
+}
+
+#icon i {
+    font-size: 45px;
+}
+
+#welcome-msg h1{
+    font-size: 1.5rem;
+    margin-bottom: 12px;
+}
+
+#names {
+    color: rgb(4 102 238);
+}
+
+#designation {
+    font-weight: 600;
+}
+
+#active button {
+    height: 25px;
+    width: 60px;
+    border: 1px solid rgb(4 102 238);
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.bio {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    background-color: #c4d3e8;
+    border-radius: 10px;
+    height: 150px;
+}
+
+.navbars {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 45px;
+    background-color: #c4d3e8;
+    border-radius: 10px;
+    padding-top: 8px;
+}
+
+#active {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+    height: 22px;
+    width: 30px;
+}
+
+#uid {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    gap: 7px;
+}
+
+#employer {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+#hospital-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid royalblue;
+    border-radius: 50%;
+    font-size: 30px;
+    color: darkolivegreen;
+}
+
+#user-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid royalblue ;
+    border-radius: 50%;
+    font-size: 30px;
+    color: sienna;
+}
+
+#parent {
+    font-weight: 300;
+}
+
+#moniker {
+    font-weight: 300;
+}
+
+#parent1 {
+    font-weight: 600;
+    color: royalblue;
+}
+
+#moniker1 {
+    font-weight: 600;
+    color: royalblue;
+}
+
+
+
+/* Message styling */
+.messages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    background-color: #d6ffcd;
+    width:100%;
+    text-align: center;
+    border-radius: 27px;
+    margin-bottom: 15px;
+}

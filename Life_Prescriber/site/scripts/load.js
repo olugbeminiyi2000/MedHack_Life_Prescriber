@@ -32,7 +32,7 @@ window.addEventListener('load', function () {
         loadingScreen.style.display = 'none';
 
         loadingScreen1 = document.getElementById('loading1')
-        loadingScreen1.style.display = "block"
+        loadingScreen1.style.display = "flex"
 
 
 

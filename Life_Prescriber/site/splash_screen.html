@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Life Presciber Loading Page</title>
-    <link rel="stylesheet" href="./styles/load.css">
+    <link rel="stylesheet" href="./styles/splash_screen.css">
     <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
 </head>
 <body>
     <!-- THE LOADING PAGE -->
     <div id="loading">
-        <img src="./images/loading1.png" alt="Loading logo 1" id="loading-logo">
+        <img src="./images/logo_placeholder.png" alt="Loading logo 1" id="loading-logo">
     </div>
 
     <!-- Second Page -->
     <div id="loading1" style="display: none;">
-        <img src="./images/loading2.png" alt="loading logo 2" id="loading-logo2">
+        <div>
+            <img src="./images/logo_placeholder.png" alt="loading logo 2" id="loading-logo2">
+        </div>
+        <div>
+            <h1>Life Prescriber™</h1>
+            <p>...your medication on the go!</p>
+        </div>
     </div>
 
     <script src="./scripts/load.js"></script>
