@@ -40,7 +40,7 @@
                     <i class="fa-solid fa-hospital"></i>
                 </div>
                 <div id="hospital-text">
-                    <p><span id="parent">Parent Organization</span><br><span id="parent1">{{ custom_logged_user.medical_institution }}</span></p>
+                    <p><span id="parent">Organization</span><br><span id="parent1">{{ custom_logged_user.medical_institution }}</span></p>
                 </div>
             </div>
             <div id="uid">
@@ -60,7 +60,7 @@
             <div id="inner-nav">
                 <a href="{% url 'prescription:change_prescribe' %}"><i class="fa-solid fa-prescription-bottle"></i></a>
             </div>
-            <div id="inner-nav">
+            <div id="inner-nav1">
                 <a href="{% url 'prescription:custom_logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
             </div>
         </div>

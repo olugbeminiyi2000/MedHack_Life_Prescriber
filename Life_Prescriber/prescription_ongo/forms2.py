@@ -9,5 +9,5 @@ class ClinicUserCreationForm(UserCreationForm):
         fields = ("first_name", "last_name", "email") + UserCreationForm.Meta.fields
 
 class ClinicUserLoginForm(forms.Form):
-    username_or_email = forms.CharField(max_length=300)
-    password = forms.CharField(widget=forms.PasswordInput)
+    username_or_email = forms.CharField(label='Username/Email', max_length=300)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
