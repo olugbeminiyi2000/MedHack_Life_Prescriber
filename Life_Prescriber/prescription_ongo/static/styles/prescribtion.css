@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "League Spartan", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    background: linear-gradient(135deg, #fff 50%, #fff 100%);
+    animation: backgroundAnimation 10s ease-in-out infinite;
+}
+
+@keyframes backgroundAnimation {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+main {
+    max-width: 700px;
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: #3690d97a;
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.main-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    min-height: 100vh; 
+    background: rgb(255, 255, 255);
+    backdrop-filter: blur(10px);
+    border-top-right-radius: 40%;
+    padding: 2rem;
+    animation: slideIn 0.8s ease-in-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.main-form form {
+    width: 80%;
+    padding-top: 3rem;
+}
+
+.main-form .logo-image {
+    margin-top: 3rem;
+    animation: fadeInDown 1s ease-in-out;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main-form .main-para {
+    margin-top: 1rem;
+    font-size: 1.1rem;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.main-form .form-group label,
+.main-form .form-group input {
+    display: block;
+}
+
+.main-form .form-group {
+    margin-bottom: 3rem;
+    animation: fadeInUp 1s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.main-form form .msg {
+    margin: 3rem 0;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.main-form form .error-msg {
+    color: #e50914;
+}
+
+.main-form form .success-msg {
+    color: #0ca04a;
+}
+
+.main-form .form-group label {
+    font-size: 1.2rem;
+}
+
+.main-form .form-group input {
+    width: 90%;
+    margin: 0.5rem 0;
+    padding: 0.4rem 0;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.862);
+    outline: 0;
+    border: none;
+    border-bottom: 1px solid #5858583c;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.main-form .form-group input:focus {
+    border-bottom: 1px solid #0c81bb;
+}
+
+.main-form .form-group textarea {
+    width: 92%;
+    max-width: 92%;
+    min-width: 92%;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 100px;
+    margin-top: 1.5rem;
+    padding: 10px;
+    font-size: 1rem;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.main-form .form-group textarea:focus {
+    border-color: #0c81bb;
+}
+
+.main-form form .btn {
+    display: flex;
+    justify-content: space-between;
+    width: 92%;
+}
+
+.main-form form .btn .submit-btn,
+.main-form form .btn .home-btn {
+    padding: 0.9rem 2rem;
+    width: 12rem;
+    font-size: 1.2rem;
+    border-radius: 0.3rem;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.main-form form .btn .submit-btn {
+    background-color: #0c81bb;
+}
+
+.main-form form .btn .submit-btn i {
+    padding-left: 0.5rem;
+}
+
+.main-form form .btn .home-btn {
+    background-color: #a52a2a;
+}
+
+.main-form form .btn .home-btn a {
+    color: #fff;
+}
+
+.main-form form .btn .home-btn i {
+    color: #fff;
+    padding-right: 0.2rem;
+}
+
+.main-form form .btn .submit-btn:hover,
+.main-form form .btn .home-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.main-form form .btn .home-btn {
+    margin-bottom: 4rem;
+}
+
+
+@media (max-width: 768px) {
+    .main-form form .btn {
+        flex-direction: column;
+    }
+
+    .main-form form .btn .submit-btn,
+    .main-form form .btn .home-btn {
+        width: 100%;
+        border-radius: 3rem;
+        margin-bottom: 1.1rem;
+    }
+
+    .main-form form .btn .home-btn {
+        margin-bottom: 4rem;
+    }
+}
