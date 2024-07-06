@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% if patient and all_prescriptions %}
+        <table>
+            <thead>
+                <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Drug Name</th>
+                    <th>Drug Use Time</th>
+                    <th>Reminder Time</th>
+                    <th>Start Time Date</th>
+                    <th>Initial Proposed Date</th>
+                    <th>Recent Proposed Date</th>
+                    <th>Total Tablets</th>
+                    <th>Total Tablets Dynamic</th>
+                    <th>No. of Times Per Day</th>
+                    <th>No. of Tablets Per Use</th>
+                    <th>Prescription Form</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{patient_first_name}}</td>
+                    <td>{{patient_last_name}}</td>
+                    <td>New Drug Name</td>
+                    <td>New Drug Use Time</td>
+                    <td>New Reminder Time</td>
+                    <td>New Start Time Date</td>
+                    <td>New Initial Proposed Date</td>
+                    <td>New Recent Proposed Date</td>
+                    <td>New Total Tablets</td>
+                    <td>New Total Tablets Dynamic</td>
+                    <td>New No. of Times Per Day</td>
+                    <td>New No. of Tablets Per Use</td>
+                    <td><a href="{% url 'prescription:new_prescribe' patient.id %}">Make new prescription</a></td>
+                </tr>
+                <!-- Iterate over your prescriptions queryset here -->
+                {% for prescription in all_prescriptions %}
+                    <tr>
+                        <td>{{ prescription.prescribed_user.first_name }}</td>
+                        <td>{{ prescription.prescribed_user.last_name }}</td>
+                        <td>{{ prescription.drug_name }}</td>
+                        <td>{{ prescription.first_time }}</td>
+                        <td>{{ prescription.prescribe_time }}</td>
+                        <td>{{ prescription.start_time }}</td>
+                        <td>{{ prescription.initial_proposed_date }}</td>
+                        <td>{{ prescription.recent_proposed_date }}</td>
+                        <td>{{ prescription.total_tablets }}</td>
+                        <td>{{ prescription.total_tablets_dynamic }}</td>
+                        <td>{{ prescription.no_of_times_per_day }}</td>
+                        <td>{{ prescription.no_of_tablets_per_use }}</td>
+                        {% if prescription.total_tablets_dynamic == 0 %}
+                            <td><a href="{% url 'prescription:prescribe' prescription.id %}">Make new prescription(from old)</a></td>
+                        {% else %}
+                            <td><a href="{% url 'prescription:change_prescribe' prescription.id %}">Change Old prescription(from old)</a></td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div>
+            No Prescription(s) found for this user
+        </div>
+    {% endif %}
+</body>
+</html>

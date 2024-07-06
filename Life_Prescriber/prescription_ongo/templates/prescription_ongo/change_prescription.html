@@ -7,45 +7,51 @@
 </head>
 <body>
     <main>
-        {% if any_error %}
-        <div>
-            {{any_error}}
-        </div>
+        {% if patient %}
+            {% if any_error %}
+            <div>
+                {{any_error}}
+            </div>
+            {% endif %}
+            {% if success_message %}
+            <div>
+                {{success_message}}
+            </div>
+            {% endif %}
+            <div>
+                <h1>Change prescription form</h1>
+            </div>
+            <div>
+                <form method="post" action="">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
+                            {{patient_form.username.label_tag}}
+                            {{patient_form.username}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.drug_name.label_tag}}
+                            {{prescribe_form.drug_name}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.no_of_times_per_day.label_tag}}
+                            {{prescribe_form.no_of_times_per_day}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.no_of_tablets_per_use.label_tag}}
+                            {{prescribe_form.no_of_tablets_per_use}}
+                        </div>
+                    </div>
+                    <div>
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        {% else %}
+            <div>
+                patient data doesn't exist!!!
+            </div>
         {% endif %}
-        {% if success_message %}
-        <div>
-            {{success_message}}
-        </div>
-        {% endif %}
-        <div>
-            <h1>Change prescription form</h1>
-        </div>
-        <div>
-            <form method="post" action="">
-                {% csrf_token %}
-                <div>
-                    <div class="form-group">
-                        {{patient_form.username.label_tag}}
-                        {{patient_form.username}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.drug_name.label_tag}}
-                        {{prescribe_form.drug_name}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.no_of_times_per_day.label_tag}}
-                        {{prescribe_form.no_of_times_per_day}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.no_of_tablets_per_use.label_tag}}
-                        {{prescribe_form.no_of_tablets_per_use}}
-                    </div>
-                </div>
-                <div>
-                    <button type="submit">Submit</button>
-                </div>
-            </form>
-        </div>
     </main>
 </body>
 </html>
