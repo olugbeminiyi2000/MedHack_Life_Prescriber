@@ -19,6 +19,7 @@
         <p>{{error_message}}</p>
     </div>
     {% endif %}
+<<<<<<< HEAD
     {% if success_message %}
         <div class="Success">
             <p>{{success_message}}</p>
@@ -49,8 +50,38 @@
                     <button id="signin_custom" type="button">Log In</button>
                 </p>
             </form>
+=======
+
+    <div class="form-container">
+        {% load crispy_forms_tags %}
+        <div id="logo-div">
+            <img src="{% static '/images/logo_placeholder.png' %}" alt="logo" id="logo">
+>>>>>>> master
         </div>
+        <div class="form-elements">
+                <h2>Welcome to <span>Life Prescriber™</span></h2>
+                <p><span>...your medication on the go!</span></p>
+        </div>
+        <form class="form-elements1" method="post" action="{% url 'prescription:custom_login' %}">
+            {% csrf_token %}
+            {{ custom_login_form|crispy }}
+            <p id="forgot-password">
+                <a href="{% url 'prescription:custom_password_reset' %}">
+                    Forgot password?
+                </a>
+            </p>
+            <p>
+                <label style="display: none" for="custom_signin"></label>
+                <input style="display: none" id="custom_signin" type="submit" name="custom_signin" value="signin" />
+            </p>
+            <p id="signin-button">
+                <button id="signin_custom" type="button">Log In</button>
+            </p>
+        </form>
     </div>
+    
+    
+
 </body>
 <script>
     const CustomButton = document.querySelector("#signin_custom");

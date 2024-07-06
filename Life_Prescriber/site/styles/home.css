@@ -4,14 +4,13 @@
 * {
     font-family: "League Spartan", sans-serif;
     font-style: normal;
-    line-height: 0.5rem;
+    line-height: 1.5rem;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
     background-color: #2260ff;
     /* text-align: center; */
 }
@@ -21,15 +20,36 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+}
+
+#loading1 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#home-text {
+    margin-top: 30px;
+}
+
+#loading1 h1,
+#loading1 p {
     text-align: center;
+    color: #fff;
+    font-weight: 300px;
 }
 
 .points {
     font-weight: 400;
+    color: #fff;
 }
-
-
-
+.points-div {
+    min-height: 100px;
+}
 
 
 

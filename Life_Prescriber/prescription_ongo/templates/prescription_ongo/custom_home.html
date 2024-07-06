@@ -5,7 +5,6 @@
     {% load static %}
     <title>Health Practitioner Page</title>
     <meta charset="utf-8">
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
     <link rel="stylesheet" href="{% static './styles/custom_home.css' %}">
@@ -15,6 +14,7 @@
 <body>
     {% include 'prescription_ongo/messages.html' %}
     <main>
+<<<<<<< HEAD
         <div class="personal-info">
             <div id="wel-icon">
                 <div id="icon">
@@ -34,23 +34,56 @@
                 <div id="inner-nav">
                     <a href="{% url 'prescription:custom_logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
                 </div>
+=======
+        <div id="hero">
+            <div id="logo-div">
+                <img src="{% static '/images/logo_placeholder.png' %}" alt="logo" id="logo">
+            </div>
+            <div class="form-elements">
+                <h2><span>Life Prescriber™</span></h2>
+                <p><span>...your medication on the go!</span></p>
+>>>>>>> master
             </div>
         </div>
 
-        <div class="bio">
-            <div id="employer">
-                <div id="hospital-icon">
-                    <i class="fa-solid fa-hospital"></i>
+        <div class="home-container">
+            <div class="personal-info">
+                <div id="wel-icon">
+                    <div id="icon">
+                        <i class="fa-solid fa-user"></i>
+                    </div>
+                    <div id="welcome-msg">
+                        <h1>Hi, welcome back!</h1>
+                        <p><span id="names">{{ custom_logged_user.first_name }} {{ custom_logged_user.last_name }}</span>
+                        </p>
+                        <p><span id="designation">{{ custom_logged_user.designation }}</span></p>
+                    </div>
                 </div>
+<<<<<<< HEAD
                 <div id="hospital-text">
                     <p><span id="parent">Parent Organization</span><br><span
                             id="parent1">{{custom_logged_user.medical_institution}}</span></p>
+=======
+                <div id="active">
+                    {% if custom_logged_user.is_authenticated %}
+                    <button>Active</button>
+                    {% else %}
+                    <button id="inactive">Inactive</button>
+                    {% endif %}
+>>>>>>> master
                 </div>
             </div>
-            <div id="uid">
-                <div id="user-icon">
-                    <i class="fa-solid fa-user-doctor"></i>
+    
+            <div class="bio">
+                <div id="employer">
+                    <div id="hospital-icon">
+                        <i class="fa-solid fa-hospital"></i>
+                    </div>
+                    <div id="hospital-text">
+                        <p><span id="parent">Organization</span><br><span id="parent1">{{ custom_logged_user.medical_institution }}</span></p>
+                    </div>
                 </div>
+<<<<<<< HEAD
                 <div id="user-text">
                     <p><span id="moniker">Username</span><br> <span id="moniker1">{{custom_logged_user.username}}</span></p>
                 </div>
@@ -113,6 +146,36 @@
                 {% endif %}
             </div>
         </div>
+=======
+                <div id="uid">
+                    <div id="user-icon">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div id="user-text">
+                        <p><span id="moniker">Username</span><br> <span id="moniker1">{{ custom_logged_user.username }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="navbars">
+            <div id="inner-nav">
+                <a href="{% url 'prescription:prescribe' %}"><i class="fa-solid fa-capsules"></i></a>
+            </div>
+            <div id="inner-nav">
+                <a href="{% url 'prescription:change_prescribe' %}"><i class="fa-solid fa-prescription-bottle"></i></a>
+            </div>
+            <div id="inner-nav1">
+                <a href="{% url 'prescription:custom_logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
+            </div>
+        </div> -->
+
+        <!-- <div class="main-div">
+                <p class="Practitioner">Hello, {{ custom_logged_user.designation }} <span id="names">{{ custom_logged_user.first_name }} {{ custom_logged_user.last_name }}</span>, welcome to <span id="callout">Life Prescriber™</span></p>
+                <span id="motto">...helping you ensure effective treatment!</span>
+                <h2>What would you like to do today?</h2>
+            </div> -->
+>>>>>>> master
     </main>
     <script>
         const searchButton = document.querySelector(".search_user");
