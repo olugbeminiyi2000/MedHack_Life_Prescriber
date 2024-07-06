@@ -32,6 +32,10 @@ main {
     height: 100%;
 }
 
+#home-text {
+    margin-top: 30px;
+}
+
 #loading1 h1,
 #loading1 p {
     text-align: center;
@@ -39,16 +43,13 @@ main {
     font-weight: 300px;
 }
 
-#points-div {
-}
 .points {
     font-weight: 400;
     color: #fff;
-    padding-bottom: 20px;
 }
-
-
-
+.points-div {
+    min-height: 100px;
+}
 
 
 
