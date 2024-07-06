@@ -26,12 +26,8 @@
             <img src="{% static '/images/logo_placeholder.png' %}" alt="logo" id="logo">
         </div>
         <div class="form-elements">
-            <div>
                 <h2>Welcome to <span>Life Prescriber™</span></h2>
-            </div>
-            <div>
                 <p><span>...your medication on the go!</span></p>
-            </div>
         </div>
         <form class="form-elements1" method="post" action="{% url 'prescription:custom_login' %}">
             {% csrf_token %}

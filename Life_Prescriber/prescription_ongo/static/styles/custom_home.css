@@ -1,23 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
 
 * {
-    margin: 0;
-    padding: 0;
     font-family: "League Spartan", sans-serif;
     font-weight: 400;
     font-style: normal;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
  body {
     background-color: #fefefeef;
-    height: 100vh;
-    width: 100%;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
     align-items: center;
     line-height: 1.5rem;
-    flex-wrap: wrap;
+    flex-wrap: wrap; */
 }
 
 /* main {
@@ -191,18 +189,73 @@ main {
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    width: fit-content;
+    max-width: 100%;
+    min-width: 373px;
+}
+
+
+#hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#logo-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 130px;
+    height: 130px;
+    margin-top: 20px;
+}
+
+#logo {
+    height: 100%;
+    width: 100%;
+}
+
+.form-elements {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 25px;
+    text-align: center;
+    padding-bottom: 20px;
+}
+
+.form-element p {
+    text-align: end;
+}
+
+.form-elements h2 {
+    font-size: 30px;
+}
+
+.form-elements span {
+    color: #0c81bb;
+}
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 450px;
+    min-width: 375px;
+    margin: 15px 0px;
+    padding: 0px 5px;
 }
 
 .personal-info {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
-    /* gap: 10px; */
-    flex-wrap: wrap;
-    height: 150px;
-    padding-top: 50px;
+    height: 120px;
+    background-color: #3690d97a;
+    border: 1px solid #0c81bb;
+    border-radius: 20px;
 }
 
 #wel-icon {
@@ -214,15 +267,15 @@ main {
 }
 
 #icon {
-    flex: 1;
     width: 80px;
     height: 80px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1.2px solid royalblue;
+    border: 1.2px solid #0c81bb;
     border-radius: 50%;
-    color: royalblue
+    color: #0c81bb;
+    margin-left: 3px;
 }
 
 #icon i {
@@ -230,16 +283,16 @@ main {
 }
 
 #welcome-msg {
-    flex: 3;
-    padding-left: 15px;
+    padding-left: 8px;
 }
 
 #welcome-msg h1 {
     font-size: 1.5rem;
+    padding-bottom: 6px;
 }
 
 #names {
-    color: rgb(4 102 238);
+    color: #0c81bb;
 }
 
 #designation {
@@ -247,30 +300,31 @@ main {
 }
 
 #active {
-    /* flex: 0; */
     display: flex;
     justify-content: center;
     align-items: center;
-    padding-right: 5px;
-    padding-left: 100px;
+    margin-right: 11px;
+    padding-left: 15px;
 }
 
 #active button {
-    padding: 3px 10px 3px 10px;
-    height: 25px;
-    width: 60px;
-    border: 1px solid rgb(4 102 238);
-    border-radius: 6px;
-    background-color: rgba(255, 255, 255, 1);
+    height: 30px;
+    width: 75px;
+    border: 1px solid #0c81bb;
+    border-radius: 15px;
+    background-color: rgb(154, 251, 178);
 }
 
 .bio {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
     align-items: center;
-    width: 100%;
-    height: 150px;
+    height: 120px;
+    background-color: #3690d97a;
+    margin-top: 20px;
+    border: 1px solid #0c81bb;
+    border-radius: 20px;
 }
 
 #employer {
@@ -279,6 +333,7 @@ main {
     justify-content: space-between;
     align-items: center;
     gap: 10px;
+    padding-left: 11px;
 }
 
 #uid {
@@ -290,25 +345,25 @@ main {
 }
 
 #hospital-icon {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1.2px solid royalblue;
+    border: 1.2px solid #0c81bb;
     border-radius: 50%;
-    color: royalblue;
+    color: #0c81bb;
 }
 
 #user-icon {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1.2px solid royalblue;
+    border: 1.2px solid #0c81bb;
     border-radius: 50%;
-    color: royalblue;
+    color: #0c81bb;
 }
 i {
     font-size: 22px;
@@ -326,12 +381,12 @@ i {
 
 #parent1 {
     font-weight: 600;
-    color: royalblue;
+    color: #0c81bb;
 }
 
 #moniker1 {
     font-weight: 600;
-    color: royalblue;
+    color: #0c81bb;
 }
 .navbars {
     display: flex;
