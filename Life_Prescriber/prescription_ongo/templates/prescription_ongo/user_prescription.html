@@ -68,6 +68,7 @@
     {% else %}
         <div>
             No Prescription(s) found for this user
+            <p><a href="{% url 'prescription:new_prescribe' patient.id %}">Make new prescription</a></p>
         </div>
     {% endif %}
 </body>
