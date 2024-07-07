@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Crud Activity</title>
+</head>
+<body>
+    <div class="link-div">
+        <p>
+            <a href="{% url 'prescription:secret_add_user' %}">Add Staff</a>
+        </p>
+        <p>
+            <a href="{% url 'prescription:secret_delete_user' %}">Delete Staff</a>
+        </p>
+    </div>
+    {% if add_user %}
+        {% if signup_form.errors %}
+            <p>{{add_user_err_msg}}</p>
+        {% endif %}
+        {% if delete_user_success_msg %}
+            <p>{{delete_user_success_msg}}</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <div>
+                {{signup_form.first_name.label_tag}}
+                {{signup_form.first_name}}
+            </div>
+            <div>
+                {{signup_form.last_name.label_tag}}
+                {{signup_form.last_name}}
+            </div>
+            <div>
+                {{signup_form.username.label_tag}}
+                {{signup_form.username}}
+                {% if signup_form.errors %}
+                    <p>{{signup_form.errors.username}}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{signup_form.email.label_tag}}
+                {{signup_form.email}}
+                {% if signup_form.errors %}
+                    <p>{{signup_form.errors.email}}</p>
+                {% endif %}
+            </div>
+            <div>
+                {{signup_form.designation.label_tag}}
+                {{signup_form.designation}}
+            </div>
+            <div>
+                {{signup_form.medical_institution.label_tag}}
+                {{signup_form.medical_institution}}
+            </div>
+            <div>
+                {{signup_form.password1.label_tag}}
+                {{signup_form.password1}}
+            </div>
+            <div>
+                {{signup_form.password2.label_tag}}
+                {{signup_form.password2}}
+                {% if signup_form.errors %}
+                    <p>{{signup_form.errors.password2}}</p>
+                {% endif %}
+            </div>
+            <button type="submit">
+                Register Staff
+            </button>
+        </form>
+    {% endif %}
+    {% if delete_user %}
+        {% if delete_user_error_msg %}
+            <p>{{delete_user_error_msg}}</p>
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            <p>
+                <label for="username">Username: </label>
+                <input type="text" name="username" id="username" value={{staff}}>
+            </p>
+            <button type="submit">
+                Remove Staff
+            </button>
+        </form>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Secret Page</title>
+</head>
+<body>
+    <main>
+        <div class="link-div">
+            <p>
+                <a href="{% url 'prescription:secret_search' %}">search_user</a>
+            </p>
+            <p>
+                <a href="{% url 'prescription:secret_signup' %}">register_user</a>
+            </p>
+        </div>
+        <div class="forms-div">
+            {% if search_user %}
+                {% if success_msg %}
+                    <p>{{success_msg}}</p>
+                    <p>click search user to display form</p>
+                {% endif %}
+                {% if error_msg %}
+                    <p>{{error_msg}}</p>
+                    <p>click search user to display form</p>
+                {% endif %}
+                {% if not msg %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <p>
+                            {{insurance_form.insurance_name.label_tag}}
+                            {{insurance_form.insurance_name}} 
+                        </p>
+                        <p>
+                            <label for="insurance_number">
+                                Insurance Number
+                            </label>
+                            <input type="text" name="insurance_number" id="insurance_number" required>
+                        </p>
+                        <button type="submit">
+                            Search User
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
+            {% if register_user %}
+                {% if sign_error_msg %}
+                    <p>{{sign_error_msg}}</p>
+                    <p>click register user to display form</p>
+                {% endif %}
+                {% if sign_success_msg %}
+                    <p>{{sign_success_msg}}</p>
+                    <p>click register user to display form</p>
+                {% endif %}
+                {% if not sign_msg %}
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <p>
+                            {{user_form.first_name.label_tag}}
+                            {{user_form.first_name}}
+                        </p>
+                        <p>
+                            {{user_form.middle_name.label_tag}}
+                            {{user_form.middle_name}}
+                        </p>
+                        <p>
+                            {{user_form.last_name.label_tag}}
+                            {{user_form.last_name}}
+                        </p>
+                        <p>
+                            {{user_form.username.label_tag}}
+                            {{user_form.username}}
+                        </p>
+                        <p>
+                            {{user_form.email.label_tag}}
+                            {{user_form.email}}
+                        </p>
+                        <p>
+                            {{insurance_form.insurance_name.label_tag}}
+                            {{insurance_form.insurance_name}}
+                        </p>
+                        <p>
+                            {{user_form.insurance_id.label_tag}}
+                            {{user_form.insurance_id}}
+                        </p>
+                        <button type="submit">
+                            Register User
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

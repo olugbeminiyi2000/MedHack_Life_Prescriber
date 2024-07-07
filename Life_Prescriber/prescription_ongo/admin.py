@@ -9,13 +9,13 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Patient, ClinicUser
+from .models import Patient, ClinicUser, Insurance
 
 class PatientAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Extra Personal info', {'fields': ('middle_name', 'phone_number')}),
+        ('Extra Personal info', {'fields': ('middle_name', 'phone_number', 'insurance_id')}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -54,5 +54,11 @@ class ClinicUserAdmin(UserAdmin):
     search_fields = ('username', 'first_name', 'last_name', 'email')
     ordering = ('username',)
 
+class InsuranceAdmin(admin.ModelAdmin):
+    list_display = ('insurance_name', )
+    search_fields = ('insurance_name', )
+
+
+admin.site.register(Insurance, InsuranceAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(ClinicUser, ClinicUserAdmin)

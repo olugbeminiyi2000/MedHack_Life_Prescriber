@@ -12,71 +12,79 @@
 
 <body>
     <main>
-        <div class="main-form">
-            <div class="logo-image">
-                <img src="{% static './images/logo_placeholder.png' %}" alt="">
-            </div>
-            <div>
-                <h1>Add Prescription</h1>
-            </div>
-            <div class="main-para">
-                <p>Never miss a dose again!</p>
-            </div>
-            <form method="post" action="">
-                {% if any_error %}
-                <div class="msg error-msg">
-                    {{any_error}}
+        {% if patient %}
+            <div class="main-form">
+                <div class="logo-image">
+                    <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
                 </div>
-                {% endif %}
-                {% if success_message %}
-                <div class="msg success-msg">
-                    {{success_message}}
-                </div>
-                {% endif %}
-                {% csrf_token %}
                 <div>
-                    <div class="form-group">
-                        {{patient_form.username.label_tag}}
-                        {{patient_form.username}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.drug_name.label_tag}}
-                        {{prescribe_form.drug_name}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.prescribe_time.label_tag}}
-                        {{prescribe_form.prescribe_time}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.total_tablets.label_tag}}
-                        {{prescribe_form.total_tablets}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.no_of_times_per_day.label_tag}}
-                        {{prescribe_form.no_of_times_per_day}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.no_of_tablets_per_use.label_tag}}
-                        {{prescribe_form.no_of_tablets_per_use}}
-                    </div>
-                    <div class="form-group">
-                        {{prescribe_form.general_description.label_tag}}
-                        {{prescribe_form.general_description}}
-                    </div>
+                    <h1>Add Prescription</h1>
                 </div>
-                <div class="btn">
+                <div class="main-para">
+                    <p>Never miss a dose again!</p>
+                </div>
+                <form method="post" action="">
+                    {% if any_error %}
+                    <div class="msg error-msg">
+                        {{any_error}}
+                    </div>
+                    {% endif %}
+                    {% if success_message %}
+                    <div class="msg success-msg">
+                        {{success_message}}
+                    </div>
+                    {% endif %}
+                    {% csrf_token %}
                     <div>
-                        <button type="submit" class="submit-btn">Submit<i class="fa-solid fa-location-arrow"></i></button>
+                        <div class="form-group">
+                            {{patient_form.username.label_tag}}
+                            {{patient_form.username}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.drug_name.label_tag}}
+                            {{prescribe_form.drug_name}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.prescribe_time.label_tag}}
+                            {{prescribe_form.prescribe_time}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.total_tablets.label_tag}}
+                            {{prescribe_form.total_tablets}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.no_of_times_per_day.label_tag}}
+                            {{prescribe_form.no_of_times_per_day}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.no_of_tablets_per_use.label_tag}}
+                            {{prescribe_form.no_of_tablets_per_use}}
+                        </div>
+                        <div class="form-group">
+                            {{prescribe_form.general_description.label_tag}}
+                            {{prescribe_form.general_description}}
+                        </div>
                     </div>
+                    <div class="btn">
+                        <div>
+                            <button type="submit" class="submit-btn">Submit<i
+                                    class="fa-solid fa-location-arrow"></i></button>
+                        </div>
 
-                    <button type="button" class="home-btn">
-                        <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i class="fa-solid fa-circle-chevron-left"></i> Back Home</a>
-                    </button>
+                        <button type="button" class="home-btn">
+                            <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
+                                    class="fa-solid fa-circle-chevron-left"></i> Back Home</a>
+                        </button>
 
-                </div>
-            </form>
-            
-        </div>
+                    </div>
+                </form>
+
+            </div>
+        {% else %}
+            <div>
+                Patient data doesn't exist
+            </div>
+        {% endif %}
     </main>
 </body>
 
