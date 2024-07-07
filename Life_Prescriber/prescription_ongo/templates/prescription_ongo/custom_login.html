@@ -16,10 +16,14 @@
     {% include 'prescription_ongo/messages.html' %}
     {% if error_message %}
     <div class="Error">
-        <p>{{ error_message }}</p>
+        <p>{{error_message}}</p>
     </div>
     {% endif %}
-
+    {% if success_message %}
+        <div class="Success">
+            <p>{{success_message}}</p>
+        </div>
+    {% endif %}
     <div class="form-container">
         {% load crispy_forms_tags %}
         <div id="logo-div">
@@ -46,9 +50,6 @@
             </p>
         </form>
     </div>
-    
-    
-
 </body>
 <script>
     const CustomButton = document.querySelector("#signin_custom");

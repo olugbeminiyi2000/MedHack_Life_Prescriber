@@ -23,7 +23,8 @@ def validate_and_normalize_phone_number(value):
 # Create your models here.
 class Patient(AbstractUser):
     middle_name = models.CharField(max_length=300)
-    phone_number = models.CharField(max_length=20, validators=[validate_and_normalize_phone_number], null=True)
+    phone_number = models.CharField(max_length=20, validators=[validate_and_normalize_phone_number], null=True, blank=True)
+    insurance_id = models.CharField(max_length=700)
 
     def save(self, *args, **kwargs):
         """
@@ -86,3 +87,17 @@ class ClinicUser(AbstractUser):
     class Meta:
         verbose_name = "Clinic User"
         verbose_name_plural = "Clinic Users"
+
+class Insurance(models.Model):
+    INSURANCE_CHOICES = [
+        ("Prime", "Prime"),
+        ("RSSB", "RSSB"),
+        ("RADIANT", "RADIANT"),
+        ("Old Mutual", "Old Mutual"),
+        ("MUA", "MUA"),
+        ("Falcon", "Falcon"),
+        ("Eden Care", "Eden Care"),
+        ("Britam", "Britam"),
+        ("Sanlam Vie", "Sanlam Vie"),
+    ]
+    insurance_name = models.CharField(max_length=700, choices=INSURANCE_CHOICES, unique=True)

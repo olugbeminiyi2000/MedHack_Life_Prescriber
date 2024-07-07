@@ -6,8 +6,9 @@ from django.views import View
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .forms2 import ClinicUserLoginForm
-from .models import ClinicUser
+from .forms2 import ClinicUserLoginForm, ClinicUserCreationForm
+from .forms import SecretInsuranceRegisterForm
+from .models import ClinicUser, Patient, Prescribe
 from .forms3 import ClinicUserPasswordCheck, ClinicUserPasswordResetForm, ClinicUserSetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -63,7 +64,28 @@ class CustomHome(View):
             will add some context soon.
             """
             context = {}
+            
+            if request.session.get("error_msg", None):
+                context["error_msg"] = request.session["error_msg"]
+                context["err_insurance_number"] = request.session["insurance_number"]
+                insurance_name = request.session["insurance_name"]
+                insurance_form = SecretInsuranceRegisterForm({"insurance_name": insurance_name})
+                del request.session["error_msg"]
+                del request.session["insurance_number"]
+                del request.session["insurance_name"]
+            elif request.session.get("success_msg", None):
+                insurance_form = SecretInsuranceRegisterForm()
+                context["success_msg"] = request.session["success_msg"]
+                context["patient"] = Patient.objects.filter(
+                    id=request.session["patient_id"],
+                ).first()
+                del request.session["success_msg"]
+                del request.session["patient_id"]                
+            else:
+                insurance_form = SecretInsuranceRegisterForm()
+
             custom_logged_user = request.user
+            context["insurance_form"] = insurance_form
             context["custom_logged_user"] = custom_logged_user
             return render(request, self.template_name, context)
         login_url = reverse("prescription:custom_login")
@@ -79,6 +101,9 @@ class CustomLogin(View):
         # create the context variable to take this form object
         context = {}
         context["custom_login_form"] = custom_login_form
+        if request.session.get("add_user_success_msg", None):
+            context["success_message"] = request.session["add_user_success_msg"]
+            del request.session["add_user_success_msg"]
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -107,7 +132,6 @@ class CustomLogin(View):
                 before you redirect custom_home add cookies to it.
                 session cookies, and time period cookies.
                 """
-                # response = redirect(reverse("prescription:custom_home"))
                 response = redirect("/site/home.html")
 
                 # set seesion cookie that will expire if browser is closed
@@ -270,3 +294,178 @@ class CustomPasswordReset(View):
         # if case are justified time to send password reset link to user email
         custom_send_password_reset_link(check_user_still_active)
         return redirect(reverse("prescription:custom_password_reset_done"))
+
+class SecretClinicUserAdd(View):
+    template_name = "prescription_ongo/pharmacy_crud.html"
+    def get(self, request):
+        context_dict = {}
+        context_dict["add_user"] = "add_user"
+
+        # get pharmacist signup form
+        signup_form = ClinicUserCreationForm()
+        context_dict["signup_form"] = signup_form
+
+        if request.session.get("delete_user_success_msg", None):
+            context_dict["delete_user_success_msg"] = request.session["delete_user_success_msg"]
+            del request.session["delete_user_success_msg"]
+
+        return render(request, self.template_name, context_dict)
+    
+    def post(self, request):
+        context_dict = {}
+        context_dict["add_user"] = "add_user"
+        # get the request.POST data inorder to validate it
+        signup_form = ClinicUserCreationForm(request.POST)
+        # validate form
+        if not signup_form.is_valid():
+            context_dict["add_user_err_msg"] = "An error occured in the form check form."
+            context_dict["signup_form"] = signup_form
+            return render(request, self.template_name, context_dict)
+        # if form is valid save the form to database
+        # signup_form.save()
+
+        user_first_name = request.POST.get("first_name")
+        user_last_name = request.POST.get("last_name")
+        user_username = request.POST.get("username")
+        user_email = request.POST.get("email")
+        user_designation = request.POST.get("designation")
+        user_medical_institution = request.POST.get("medical_institution")
+        user_password = request.POST.get("password1")
+
+        ClinicUser.objects.create_user(
+            first_name=user_first_name.capitalize(),
+            last_name=user_last_name.capitalize(),
+            username=user_username,
+            email=user_email,
+            designation=user_designation.capitalize(),
+            medical_institution=user_medical_institution.capitalize(),
+            password=user_password,
+        )
+
+
+             
+        # then save a success message in session then redirect to splash screen
+        request.session["add_user_success_msg"] = "A new pharmacist has been created."
+        return redirect("/site/splash_screen.html")
+    
+
+class SecretClinicUserDelete(View):
+    template_name = "prescription_ongo/pharmacy_crud.html"
+    def get(self, request):
+        context_dict = {}
+        context_dict["delete_user"] = "delete_user"
+
+        return render(request, self.template_name, context_dict)
+    
+    def post(self, request):
+        context_dict = {}
+        context_dict["delete_user"] = "delete_user" 
+
+        # check the username and see if it exists in the database if it doesn't not send an error
+        get_username = request.POST.get("username")
+        check_if_user_exists = ClinicUser.objects.filter(
+            username=get_username,
+        )
+        if not check_if_user_exists.exists():
+            context_dict["delete_user_error_msg"] = f"This staff with username {get_username} doesn't exist."
+            context_dict["staff"] = get_username
+            return render(request, self.template_name, context_dict)
+        
+        
+        # add message to session
+        request.session["delete_user_success_msg"] = f"User {check_if_user_exists.first().first_name} {check_if_user_exists.first().last_name} successfully deleted..."
+
+        # if user exists remove user from database
+        ClinicUser.objects.filter(
+            username=get_username
+        ).delete()
+
+        # now return a redirect to clinicuseradd
+        return redirect(reverse("prescription:secret_add_user"))
+        
+
+class PharmacySecretSearch(View):
+    def get(self, request):
+        return redirect("prescription:custom_home")
+    
+    def post(self, request):
+        get_insurance_name = request.POST.get("insurance_name")
+        get_insurance_number = request.POST.get("insurance_number")
+
+        # remove all spaces in insurance name and insurance number
+        clean_insurance_name = ""
+        clean_insurance_number = ""
+
+        for i in get_insurance_name:
+            if i == "\n" or i == "\t" or i == " ":
+                continue
+            clean_insurance_name += i
+        
+        for j in get_insurance_number:
+            if j == "\n" or j == "\t" or j == " ":
+                continue
+            clean_insurance_number += j
+        
+        # check if that insurance id exist
+        insurance_id = clean_insurance_name.lower() + "-" + clean_insurance_number.lower()
+        print(insurance_id)
+
+        check_if_user_exist = Patient.objects.filter(
+            insurance_id=insurance_id,
+        )            
+
+        if check_if_user_exist.exists():
+            # now get the id of that patient and save a success message
+            patient_id = check_if_user_exist.first().id
+            request.session["patient_id"] = patient_id
+            request.session["success_msg"] = f"User with insurance_number {insurance_id} exists."
+            return redirect("prescription:custom_home")
+        else:
+            request.session["error_msg"] = f"User doesn't exist, create a new user or retry again."
+            request.session["insurance_name"] = get_insurance_name
+            request.session["insurance_number"] = get_insurance_number
+            return redirect("prescription:custom_home")
+    
+
+class UserPrescription(View):
+    template_name = "prescription_ongo/user_prescription.html"
+
+    def get(self, request, patient_id):
+        if request.user.is_authenticated:
+            # TODO: make sure you do what is in the docstring
+            """
+            check if cookies is expired and redirect them login as
+            get request and after authentication new cookies are added,
+            and we are sent to custom_home.
+            """
+            if not (request.COOKIES.get("custom_session", None) == "session_cookie") or \
+                    not (request.COOKIES.get("custom_time", None) == "time_cookie"):
+                login_url = reverse("prescription:custom_login")
+                return redirect(login_url)
+            """
+            we need to know the user authenticated either django user
+            or custom user.
+            """
+            if not isinstance(request.user, ClinicUser):
+                login_url = reverse("prescription:custom_login")
+                return redirect(login_url)
+            
+            context_dict = {}
+            # get the patient first then get the prescription(s) for that patient
+            patient = Patient.objects.filter(
+                id=patient_id,
+            ).first()
+            if patient:
+                context_dict["patient_first_name"] = patient.first_name
+                context_dict["patient_last_name"] = patient.last_name
+            
+            context_dict["patient"] = patient
+
+            all_prescriptions = Prescribe.objects.filter(
+                prescribed_user=patient,
+            ).all().order_by("-start_time")
+            context_dict["all_prescriptions"] = all_prescriptions
+            return render(request, self.template_name, context_dict)
+                
+        login_url = reverse("prescription:custom_login")
+        return redirect(login_url)
