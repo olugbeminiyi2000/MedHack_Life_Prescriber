@@ -90,7 +90,7 @@ img {
     max-width: 450px;
     min-width: 375px;
     margin: 15px 0px;
-    padding: 0px 5px;
+    padding: 0px 10px;
 }
 
 .personal-info {
@@ -164,6 +164,10 @@ img {
 
 #inner-nav {
     padding-top: 15px;
+}
+
+#inner-nav a {
+    color: #be3030;
 }
 
 .bio {
@@ -272,6 +276,7 @@ form {
     width: 100%;
     max-width: 450px;
     min-width: 375px;
+    margin: 15px 0px;
 }
 
 #field1 {
@@ -299,7 +304,7 @@ form {
 }
 
 label {
-    font-weight: 600;
+    font-weight: 700;
     font-variant-caps: all-petite-caps;
     color: #0c81bb;
 }
@@ -324,11 +329,91 @@ input#insurance_number {
     height: 25px;
     width: 150px;
     outline: none;
+    text-align: center;
     background-color: #3690d97a;
     color: #056b9adc;
 }
 
-th {
+
+.table-div {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 450px;
+    min-width: 375px;
+    margin: 15px 0px 25px 0px;
+    padding: 2px;
+    border: 1px solid royalblue;
+    border-radius: 20px;
+}
+
+
+#profile-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #0c81bb;
+    background-color: #3690d97a;
+    border-radius: 18px;
+    padding: 8px;
+}
+
+#card-user {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    width: 100%;
+    padding: 4px;
+}
+
+#card-user h1 {
+    font-weight: 700;
+    font-variant-caps: all-petite-caps;
+    color: #0c81bb;
+}
+
+#profile-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 8px;
+    line-height: 1.5rem;
+}
+
+#tags h2 {
+    font-weight: 700;
+    font-variant-caps: all-petite-caps;
+    color: #0c81bb;
+}
+
+#prescription-link a {
+    text-decoration: none;
+    font-weight: 700;
+    font-variant-caps: petite-caps;
+    color: #0c81bb;
+}
+
+.detail1 {
+    font-weight: 800;
+    font-variant-caps: normal;
+    color: #02151f;
+}
+
+footer {
+    margin-top: 70px;
+    text-align: center;
+}
+
+
+
+
+
+/* th {
     font-weight: 600;
     font-variant-caps: all-petite-caps;
     color: #0c81bb;
@@ -341,9 +426,9 @@ th {
 #table-div h1 {
     padding-bottom: 7px;
     color: #056b9adc;
-}
+} */
 
-table {
+/* table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -374,4 +459,5 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
+} */
+
