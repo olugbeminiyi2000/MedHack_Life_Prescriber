@@ -32,7 +32,7 @@ main {
     justify-content: center;
     align-items: center;
     border: none;
-    background: #3690d97a;
+    background: #3b3361;
     backdrop-filter: blur(10px);
     box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.2);
     border-radius: 20px;
@@ -71,12 +71,31 @@ main {
 
 .main-form .logo-image {
     margin-top: 3rem;
+    margin-bottom: 0;
     animation: fadeInDown 1s ease-in-out;
 }
 
 @keyframes fadeInDown {
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* .main-form .prescription-image {
+    max-width: 20rem;
+    max-height: 20rem;
+} */
+
+.main-form .sub-image {
+    margin-top: -4rem;
+    margin-bottom: -5rem;
+}
+
+.main-form .prescription-image {
+    max-width: 90%;
+    height: auto; 
+    display: block; 
+    margin: 1rem auto; 
+    border-radius: 10px;
 }
 
 .main-form .main-para {
@@ -187,7 +206,6 @@ main {
     position: relative;
     overflow: hidden;
     width: 11rem;
-    margin-bottom: 4rem;
     background-color: #a52a2a;
     transition: background-color 0.3s ease-in-out;
 }
@@ -232,6 +250,10 @@ main {
     background-color: rgba(0, 0, 0, 0.8);
 }
 
+.btn .home-btn {
+    margin-bottom: 4rem;
+}
+
 /* Not Found */
 .not-found {
     display: flex;
@@ -248,7 +270,22 @@ main {
 }
 
 
+@media (max-width: 1024px) {
+    .main-form .prescription-image {
+        max-width: 90%;
+    }
+}
+
 @media (max-width: 768px) {
+    .main-form .sub-image {
+        margin-top: -2rem;
+        margin-bottom: -3rem;
+    }
+
+    .main-form .prescription-image {
+        max-width: 80%; 
+    }
+
     .main-form form .btn {
         flex-direction: column;
     }
@@ -262,5 +299,16 @@ main {
 
     .btn .home-btn {
         margin-bottom: 4rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-form .sub-image {
+        margin-top: -2rem;
+        margin-bottom: -1rem;
+    }
+
+    .main-form .prescription-image {
+        max-width: 70%; 
     }
 }

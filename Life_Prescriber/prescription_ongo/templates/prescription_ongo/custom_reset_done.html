@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>Clinic User Set Password Successful</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   {% load static %}
+    {% load static %}
     <link rel="stylesheet" href="{% static './styles/custom_reset_done.css' %}" type="text/css">
 </head>
+
 <body>
-    <section>
-        <h1>You have successfully reset your password :)</h1>
-        <a href="{% url 'prescription:custom_login' %}" class="login-button">Back to Login</a>
+    <section class="form-container">
+        <div class="main-form">
+            <h1>Password reset successful!</h1>
+            <div class="back-link-btn">
+                <p>
+                    <a href="{% url 'prescription:custom_login' %}" class="back-link">
+                        Back to Login
+                    </a>
+                </p>
+            </div>
+        </div>
     </section>
 </body>
+
 </html>
