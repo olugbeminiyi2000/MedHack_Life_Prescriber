@@ -1,57 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Change Prescription</title>
+    <link rel="stylesheet" href="{% static './styles/change_prescription.css' %}">
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
+    {% if patient or any_error or success_message %}
     <main>
-        {% if patient %}
-            {% if any_error %}
-            <div>
-                {{any_error}}
+        <div class="main-form">
+            <div class="logo-image">
+                <img src="{% static './images/logo_placeholder.png' %}" alt="logo">
             </div>
-            {% endif %}
-            {% if success_message %}
-            <div>
-                {{success_message}}
-            </div>
-            {% endif %}
-            <div>
-                <h1>Change prescription form</h1>
+            <div class="sub-image">
+                <img src="{% static './images/prescription.jpg' %}" alt="prescription-image" class="prescription-image">
             </div>
             <div>
-                <form method="post" action="">
-                    {% csrf_token %}
-                    <div>
-                        <div class="form-group">
-                            {{patient_form.username.label_tag}}
-                            {{patient_form.username}}
-                        </div>
-                        <div class="form-group">
-                            {{prescribe_form.drug_name.label_tag}}
-                            {{prescribe_form.drug_name}}
-                        </div>
-                        <div class="form-group">
-                            {{prescribe_form.no_of_times_per_day.label_tag}}
-                            {{prescribe_form.no_of_times_per_day}}
-                        </div>
-                        <div class="form-group">
-                            {{prescribe_form.no_of_tablets_per_use.label_tag}}
-                            {{prescribe_form.no_of_tablets_per_use}}
-                        </div>
+                <h1>Change Prescription</h1>
+            </div>
+            <div class="main-para">
+                <p>Stay on track with every dose!</p>
+            </div>
+
+            <form method="post" action="">
+                {% if any_error %}
+                <div class="msg error-msg">
+                    {{any_error}}
+                </div>
+                {% endif %}
+                {% if success_message %}
+                <div class="msg success-msg">
+                    {{success_message}}
+                </div>
+                {% endif %}
+                {% csrf_token %}
+                <div>
+                    <div class="form-group no-focus">
+                        {{patient_form.username.label_tag}}
+                        {{patient_form.username}}
                     </div>
-                    <div>
-                        <button type="submit">Submit</button>
+                    <div class="form-group no-focus">
+                        {{prescribe_form.drug_name.label_tag}}
+                        {{prescribe_form.drug_name}}
                     </div>
-                </form>
-            </div>
-        {% else %}
-            <div>
-                patient data doesn't exist!!!
-            </div>
-        {% endif %}
+                    <div class="form-group">
+                        {{prescribe_form.no_of_times_per_day.label_tag}}
+                        {{prescribe_form.no_of_times_per_day}}
+                    </div>
+                    <div class="form-group">
+                        {{prescribe_form.no_of_tablets_per_use.label_tag}}
+                        {{prescribe_form.no_of_tablets_per_use}}
+                    </div>
+                    <div class="form-group" style="display: none;">
+                        <label for="patient-id">patient id</label>
+                        <input type="hidden" name="patient_id" value="{{patient_id}}" id="patient-id">
+                    </div>
+                </div>
+                <div class="btn">
+                    <div>
+                        <button type="submit" class="submit-btn">Submit<i
+                                class="fa-solid fa-location-arrow"></i></button>
+                    </div>
+
+                    <button type="button" class="home-btn">
+                        <a href="{% url 'prescription:user_prescription' patient_id %}"
+                            style="text-decoration: none;"><i class="fa-solid fa-circle-chevron-left"></i>Back</a>
+                    </button>
+
+                </div>
+            </form>
+        </div>
     </main>
+    {% else %}
+    <div class="btn not-found">
+        <p>Patient data doesn't exist!</p>
+        <button type="button" class="home-btn not-found-btn">
+            <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
+                    class="fa-solid fa-circle-chevron-left"></i> Go Home</a>
+        </button>
+    </div>
+    {% endif %}
 </body>
+
 </html>

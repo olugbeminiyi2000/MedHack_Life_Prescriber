@@ -1,25 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        {% load static %}
-        <title>Clinic User Ban: Not allowed!!!</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
-        <link rel="stylesheet" href="{% static './styles/custom_ban.css' %}">
-    </head>
-    <body>
-        <section class="error">
+
+<head>
+    {% load static %}
+    <title>Clinic User Ban: Not allowed!!!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
+    <link rel="stylesheet" href="{% static './styles/custom_ban.css' %}">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Oswald:wght@200..700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "League Spartan", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            /* background: linear-gradient(135deg, #34e89e 0%, #0f3443 100%); */
+        }
+
+        div {
+            /* margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #fff; */
+            text-align: center;
+        }
+
+        h1 {
+            color: #a52a2a;
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .back-link-btn {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .back-link-btn a {
+            text-decoration: none;
+            color: #ffa500;
+            font-size: 1.2rem;
+        }
+
+        .back-link-btn a:hover {
+            text-decoration: underline;
+            color: #c07d02;
+        }
+
+        #loom-companion-mv3 {
+            display: none;
+        }
+
+        lord-icon {
+            --lord-icon-primary: #a52a2a;
+            --lord-icon-secondary: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="error">
         {% if error_message %}
-            <div class="error-message">
-                {{ error_message }}
-            </div>
+        <div class="error-message">
+            <h1>{{ error_message }}</h1>        
+        </div>
         {% endif %}
-        </section>
-        <section class="blocked-section">
-            <div class="blocked">
-                <h1>You have been blocked from accessing this page.</h1>
-            </div>
-        </section>
-    </body>
+    </section>
+    <lord-icon src="https://cdn.lordicon.com/usownftb.json" trigger="hover" style="width:250px;height:250px">
+    </lord-icon>
+    {% if password_reset_email %}
+    <div class="back-link-btn">
+        <p>
+            <a href="{% url 'prescription:custom_password_reset' %}" class="back-link">
+                Back
+            </a>
+        </p>
+    </div>
+    {% else %}
+    <div class="back-link-btn">
+        <p>
+            <a href="{% url 'prescription:custom_login' %}" class="back-link">
+                Back to Login
+            </a>
+        </p>
+    </div>
+    {% endif %}
+</body>
+
 </html>

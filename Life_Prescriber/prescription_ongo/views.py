@@ -77,6 +77,8 @@ class PrescribeView(View):
                 id=prescription_id,
             ).first()
 
+            context_variable = {}
+
             if user_prescription:
                 patient_data = {
                     "username": user_prescription.prescribed_user.username,
@@ -84,13 +86,13 @@ class PrescribeView(View):
                 prescribe_data = {
                     "drug_name": user_prescription.drug_name,
                 }
+                context_variable["patient"] = user_prescription.prescribed_user
+                context_variable["patient_id"] = user_prescription.prescribed_user.id
             else:
                 patient_data = {}
                 prescribe_data = {}
 
             patient_form, prescribe_form = PatientForm(patient_data), PrescribeForm(prescribe_data)
-            context_variable = {}
-            context_variable["patient"] = user_prescription.prescribed_user
             context_variable["patient_form"] = patient_form
             context_variable["prescribe_form"] = prescribe_form
             if request.session.get("success_message", None):
@@ -108,13 +110,17 @@ class PrescribeView(View):
         check_username_exist = Patient.objects.filter(
             username=get_username_from_post,
         )
+        patient_id = request.POST.get("patient_id")
+
         if not check_username_exist.exists():
             context_variable = send_back_error_with_previous_data(request, "This patient username doesn't exist.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         get_prescribe_time_from_post = request.POST.get("prescribe_time")
         if len(get_prescribe_time_from_post) > 4:
             context_variable = send_back_error_with_previous_data(request, "prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         # check if the first or first two characters can be converted to int
@@ -122,17 +128,20 @@ class PrescribeView(View):
             try_convert = int(get_prescribe_time_from_post[0:2]) if len(get_prescribe_time_from_post) == 4 else int(get_prescribe_time_from_post[0])
         except ValueError:
                 context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+                context_variable["patient_id"] = patient_id
                 return render(request, self.template_name, context_variable)
         
         # check if the last 2 characters is am or pm
         period_value = get_prescribe_time_from_post[-2: ]
         if period_value.lower() not in periods:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         #  check if the try convert is between a range
         if not 1 <= try_convert <= 12:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> and  between range 1 to 12  e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)  
                 
         # now save all the data for the patient prescription
@@ -160,6 +169,7 @@ class PrescribeView(View):
             total_days = math.ceil(int(total_tablets) / (int(no_of_times_per_day) * int(no_of_tablets_per_use)))
         except ZeroDivisionError:
             context_variable = send_back_error_with_previous_data(request, "Invalid entry no_of_times_per_day or no_of_tablets_per_use cannot be 0.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
                  
         initial_proposed_date = start_time + timedelta(total_days - 1)
@@ -271,7 +281,7 @@ class ChangePrescribeView(View):
             ).first()
 
             context_variable = {}
-            
+    
             if user_prescription:
                 patient_data = {
                     "username": user_prescription.prescribed_user.username,
@@ -280,6 +290,7 @@ class ChangePrescribeView(View):
                     "drug_name": user_prescription.drug_name,
                 }
                 context_variable["patient"] = user_prescription.prescribed_user
+                context_variable["patient_id"] = user_prescription.prescribed_user.id
             else:
                 patient_data = {}
                 prescribe_data = {}
@@ -300,8 +311,13 @@ class ChangePrescribeView(View):
         check_username_exist = Patient.objects.filter(
             username=get_username_from_post,
         )
+        # get patient_id from input hidden field and add them to errors context variable
+        patient_id = request.POST.get("patient_id")
+
         if not check_username_exist.exists():
             context_variable = send_back_error_with_previous_data_2(request, f"This patient with username {get_username_from_post} doesn't exist.")
+            context_variable["patient_id"] = patient_id
+
             return render(request, self.template_name, context_variable)
         
         drug_name = request.POST.get("drug_name")
@@ -311,7 +327,9 @@ class ChangePrescribeView(View):
         ).first()
 
         if not prescription:
-            context_variable = send_back_error_with_previous_data_2(request, f"prescrition with drug name {drug_name} for username {get_username_from_post} is not found.")
+            context_variable = send_back_error_with_previous_data_2(request, f'Prescription with drug name "{drug_name}" for username "{get_username_from_post}" not found.')
+            context_variable["patient_id"] = patient_id
+
             return render(request, self.template_name, context_variable)
         
         new_no_of_times_per_day = int(request.POST.get("no_of_times_per_day"))
@@ -322,6 +340,8 @@ class ChangePrescribeView(View):
                 raise ZeroDivisionError
         except ZeroDivisionError:
             context_variable = send_back_error_with_previous_data_2(request, "Invalid entry no_of_times_per_day or no_of_tablets_per_use cannot be 0.")
+            context_variable["patient_id"] = patient_id
+
             return render(request, self.template_name, context_variable)          
 
         #TODO check if new_no_of_times_per_day or new_no_of_tablets_per_use == 0
@@ -425,9 +445,9 @@ class HospitalSecretSearch(View):
             context_dict["msg"] = "msg"
 
             if check_if_user_exist.exists():
-                context_dict["success_msg"] = f"User with insurance_number {clean_insurance_number} exists."
+                context_dict["success_msg"] = f'Insurance number "{clean_insurance_number}" exists'
             else:
-               context_dict["error_msg"] = f"User doesn't exist, create a new user or retry again."
+               context_dict["error_msg"] = f"User doesn't exist. Create a new user or Retry"
         
         insurance_form = SecretInsuranceRegisterForm()
         context_dict["insurance_form"] = insurance_form
@@ -468,9 +488,9 @@ class HospitalSecretSearch(View):
             context_dict["msg"] = "msg"
 
             if check_if_user_exist.exists():
-                context_dict["success_msg"] = f"User with insurance_number {clean_insurance_number} exists."
+                context_dict["success_msg"] = f'Insurance number "{clean_insurance_number}" exists'
             else:
-               context_dict["error_msg"] = f"User doesn't exist, create a new user or retry again."
+               context_dict["error_msg"] = f"User doesn't exist. Create a new user or Retry"
 
         return render(request, self.template_name, context_dict)
     
@@ -543,15 +563,15 @@ class HospitalSecretSignUp(View):
 
         if check_user_username.exists():
             context_dict["sign_msg"] = "sign_msg"
-            context_dict["sign_error_msg"] = f"User with username {clean_username} already exists."
+            context_dict["sign_error_msg"] = f'Username "{clean_username}" already exists'
             return render(request, self.template_name, context_dict)
         elif check_user_insurance_id.exists():
             context_dict["sign_msg"] = "sign_msg"
-            context_dict["sign_error_msg"] = f"User with insurance_id {clean_insurance_id} already exists."
+            context_dict["sign_error_msg"] = f'Insurance Id "{clean_insurance_id}" already exist'
             return render(request, self.template_name, context_dict)
         elif check_user_email.exists():
             context_dict["sign_msg"] = "sign_msg"
-            context_dict["sign_error_msg"] = f"User with email {get_email} already exists."
+            context_dict["sign_error_msg"] = f'Email "{get_email}" already exists'
             return render(request, self.template_name, context_dict)
 
         else:
@@ -609,6 +629,7 @@ class NewPrescribeView(View):
 
             if patient:
                 patient_data = {"username": patient.username}
+                context_variable["patient_id"] = patient.id
             else:
                 patient_data = {}
             
@@ -619,7 +640,7 @@ class NewPrescribeView(View):
             if request.session.get("success_message", None):
                 context_variable["success_message"] = request.session["success_message"]
                 del request.session["success_message"]
-            print("trying to cretae a new medication")
+            print("trying to create a new medication")
             print(request.path)
             return render(request, self.template_name, context_variable)
              
@@ -633,13 +654,18 @@ class NewPrescribeView(View):
         check_username_exist = Patient.objects.filter(
             username=get_username_from_post,
         )
+
+        patient_id = request.POST.get("patient_id")
+
         if not check_username_exist.exists():
             context_variable = send_back_error_with_previous_data(request, "This patient username doesn't exist.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         get_prescribe_time_from_post = request.POST.get("prescribe_time")
         if len(get_prescribe_time_from_post) > 4:
             context_variable = send_back_error_with_previous_data(request, "prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         # check if the first or first two characters can be converted to int
@@ -647,17 +673,20 @@ class NewPrescribeView(View):
             try_convert = int(get_prescribe_time_from_post[0:2]) if len(get_prescribe_time_from_post) == 4 else int(get_prescribe_time_from_post[0])
         except ValueError:
                 context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+                context_variable["patient_id"] = patient_id
                 return render(request, self.template_name, context_variable)
         
         # check if the last 2 characters is am or pm
         period_value = get_prescribe_time_from_post[-2: ]
         if period_value.lower() not in periods:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
         
         #  check if the try convert is between a range
         if not 1 <= try_convert <= 12:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> and  between range 1 to 12  e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)  
                 
         # now save all the data for the patient prescription
@@ -685,6 +714,7 @@ class NewPrescribeView(View):
             total_days = math.ceil(int(total_tablets) / (int(no_of_times_per_day) * int(no_of_tablets_per_use)))
         except ZeroDivisionError:
             context_variable = send_back_error_with_previous_data(request, "Invalid entry no_of_times_per_day or no_of_tablets_per_use cannot be 0.")
+            context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
                  
         initial_proposed_date = start_time + timedelta(total_days - 1)

@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&family=Oswald:wght@200..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "League Spartan", sans-serif;
+}
+
+body {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    /* background-color: #0c81bb; */
+}
+
+.form-container {
+    min-width: 50%;
+    height: 25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+}
+
+.main-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    width: 80%;
+    height: 100%;
+    text-align: center;
+    gap: 1rem;
+}
+
+.main-form h1 {
+    color: #0ca04a;
+}
+
+.back-link-btn {
+    display: flex;
+    justify-content: center;
+    /* margin: 2rem 0; */
+}
+
+.back-link-btn a {
+    /* text-decoration: none; */
+    color: #ffa500;
+    font-size: 1.2rem;
+}
+
+.back-link-btn a:hover {
+    text-decoration: underline;
+    color: #c07d02;
+}
+
+
+@media (max-width: 480px) {
+    .reset-error {
+        gap: 12px;
+    }
+
+    .form-header {
+        font-size: 1.3rem;
+    }
+
+    .form-input form input {
+        font-size: 1rem;
+    }
+
+    .form-input-btn .submit-btn {
+        font-size: 1rem;
+    }
+
+    .back-link-btn a {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        min-width: 90%;
+    }
+}
