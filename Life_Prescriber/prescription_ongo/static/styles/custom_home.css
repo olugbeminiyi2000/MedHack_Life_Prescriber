@@ -397,6 +397,9 @@ input#insurance_number {
     font-variant-caps: petite-caps;
     color: #0c81bb;
 }
+#details {
+    margin-left: 10px
+}
 
 .detail1 {
     font-weight: 800;
