@@ -1,96 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hospital Secret Page</title>
+    <link rel="stylesheet" href="{% static './styles/registerusers.css' %}" type="text/css">
+    <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </head>
+
 <body>
     <main>
-        <div class="link-div">
-            <p>
-                <a href="{% url 'prescription:secret_search' %}">search_user</a>
-            </p>
-            <p>
-                <a href="{% url 'prescription:secret_signup' %}">register_user</a>
-            </p>
-        </div>
-        <div class="forms-div">
-            {% if search_user %}
+        <div class="main-form">
+            <div class="main-form-btn">
+                <div class="logo-image">
+                    <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
+                    <p>Life Prescriber™</p>
+                </div>
+                <div class="switch-buttons">
+                    <div class="slider {% if search_user %}move-slider{% else %}move-slider1{% endif %}"
+                        id="slider-button">
+
+                    </div>
+                    <button class="switch-buttons__item" id="sign-in-switch" type="button"
+                        data-url="{% url 'prescription:secret_search' %}">Search</button>
+                    <button class="switch-buttons__item" id="register-switch" type="button"
+                        data-url="{% url 'prescription:secret_signup' %}">Register</button>
+                </div>
+            </div>
+
+            <div class="forms-div">
+                {% if search_user %}
                 {% if success_msg %}
-                    <p>{{success_msg}}</p>
-                    <p>click search user to display form</p>
+                <div class="success-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/guqkthkk.json" trigger="in">
+                        </lord-icon>
+                        <p>{{success_msg}}</p>
+                    </div>
+                    <p class="success-search-msg">Click the <span class="inner-success-text">"Search"</span> button to
+                        display form</p>
+                </div>
                 {% endif %}
                 {% if error_msg %}
-                    <p>{{error_msg}}</p>
-                    <p>click search user to display form</p>
+                <div class="error-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/jxzkkoed.json" trigger="in" stroke="light">
+                        </lord-icon>
+                        <p>{{error_msg}}</p>
+                    </div>
+                    <p class="error-search-msg">Click the <span class="inner-error-text">"Search"</span> button to
+                        display form</p>
+                </div>
                 {% endif %}
                 {% if not msg %}
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
                             {{insurance_form.insurance_name.label_tag}}
-                            {{insurance_form.insurance_name}} 
-                        </p>
-                        <p>
+                            {{insurance_form.insurance_name}}
+                        </div>
+                        <div class="form-group">
                             <label for="insurance_number">
                                 Insurance Number
                             </label>
                             <input type="text" name="insurance_number" id="insurance_number" required>
-                        </p>
-                        <button type="submit">
-                            Search User
-                        </button>
-                    </form>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <div>
+                            <button type="submit" class="submit-btn">Search<i
+                                    class="fa-solid fa-location-arrow"></i></button>
+                        </div>
+                    </div>
+                    <!-- <button type="submit">
+                        Search User
+                    </button> -->
+                </form>
                 {% endif %}
-            {% endif %}
-            {% if register_user %}
+                {% endif %}
+                {% if register_user %}
                 {% if sign_error_msg %}
-                    <p>{{sign_error_msg}}</p>
-                    <p>click register user to display form</p>
+                <div class="error-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/jxzkkoed.json" trigger="in" stroke="light">
+                        </lord-icon>
+                        <p>{{sign_error_msg}}</p>
+                    </div>
+                    <p class="error-search-msg">Click the <span class="inner-error-text">"Register"</span> button to
+                        display form</p>
+                </div>
                 {% endif %}
                 {% if sign_success_msg %}
-                    <p>{{sign_success_msg}}</p>
-                    <p>click register user to display form</p>
+                <div class="success-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/guqkthkk.json" trigger="in">
+                        </lord-icon>
+                        <p>{{sign_success_msg}}</p>
+                    </div>
+                    <p class="success-search-msg">Click the <span class="inner-success-text">"Register"</span> button to
+                        display form</p>
+                </div>
                 {% endif %}
                 {% if not sign_msg %}
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        <p>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
                             {{user_form.first_name.label_tag}}
                             {{user_form.first_name}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{user_form.middle_name.label_tag}}
                             {{user_form.middle_name}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{user_form.last_name.label_tag}}
                             {{user_form.last_name}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{user_form.username.label_tag}}
                             {{user_form.username}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{user_form.email.label_tag}}
                             {{user_form.email}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{insurance_form.insurance_name.label_tag}}
                             {{insurance_form.insurance_name}}
-                        </p>
-                        <p>
+                        </div>
+                        <div class="form-group">
                             {{user_form.insurance_id.label_tag}}
                             {{user_form.insurance_id}}
-                        </p>
-                        <button type="submit">
-                            Register User
-                        </button>
-                    </form>
+                        </div>
+                    </div>
+                    <div class="btn">
+                        <div>
+                            <button type="submit" class="submit-btn">Register<i
+                                    class="fa-solid fa-location-arrow"></i></button>
+                        </div>
+                    </div>
+                    <!-- <button type="submit">
+                        Register User
+                    </button> -->
+                </form>
                 {% endif %}
-            {% endif %}
+                {% endif %}
+            </div>
         </div>
     </main>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slider = document.querySelector(".slider");
+        const signInButton = document.getElementById("sign-in-switch");
+        const registerButton = document.getElementById("register-switch");
+
+        signInButton.addEventListener("click", function () {
+            slider.style.left = signInButton.offsetLeft + "5px";
+            setTimeout(() => {
+                window.location.href = signInButton.getAttribute('data-url');
+            }, 400)
+        });
+
+        registerButton.addEventListener("click", function () {
+            slider.style.left = registerButton.offsetLeft + "px";
+            setTimeout(() => {
+                window.location.href = registerButton.getAttribute('data-url')
+            }, 400);
+        });
+
+    });
+</script>
+
 </html>

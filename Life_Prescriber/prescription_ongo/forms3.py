@@ -3,7 +3,10 @@ from django.contrib.auth.forms import SetPasswordForm
 from django import forms
 
 class ClinicUserPasswordResetForm(PasswordResetForm):
-    pass
+    email = forms.EmailField(
+        max_length=500,
+        widget=forms.EmailInput(attrs={'placeholder': 'Email'})
+    )
 
 class ClinicUserSetPasswordForm(SetPasswordForm):
     pass
