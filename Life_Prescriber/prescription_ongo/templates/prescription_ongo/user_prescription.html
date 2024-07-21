@@ -19,6 +19,15 @@
             </div>
             <div class="new-prescription-header">
                 <h2><span class="prescription-text">Prescriptions</span></h2>
+                <div class="box">
+                    <button type="button" id="search-button"
+                        data-url="{% url 'prescription:user_prescription' patient.id %}">
+                        <i class="fa-solid fa-magnifying-glass icon"></i>
+                    </button>
+                    <label style="display: none;" for="search-box"></label>
+                    <input type="text" name="drug-search" id="search-box"
+                        placeholder="search">
+                </div>
                 <button class="new-prescription-btn">
                     <a href="{% url 'prescription:new_prescribe' patient.id %}">Add New<i
                             class="fa-solid fa-plus"></i></a>
@@ -54,7 +63,8 @@
                         </div>
 
                         <div class="drug-end-date">
-                            <p><span class="inner-text">End Date: </span>{{ prescription.recent_proposed_date|date:"d" }}</p>
+                            <p><span class="inner-text">End Date: </span>{{ prescription.recent_proposed_date|date:"d"}}
+                            </p>
                             <p>{{ prescription.recent_proposed_date|date:"F" }}</p>
                         </div>
 
@@ -80,9 +90,11 @@
                 </div>
                 <div class="actions">
                     {% if prescription.total_tablets_dynamic == 0 %}
-                    <a href="{% url 'prescription:prescribe' prescription.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a> <!--Make new prescription (from old) -->
+                    <a href="{% url 'prescription:prescribe' prescription.id %}" class="edit-btn"><i
+                            class="fa-solid fa-pen-to-square"></i></a> <!--Make new prescription (from old) -->
                     {% else %}
-                    <a href="{% url 'prescription:change_prescribe' prescription.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a> <!--Change Old prescription (from
+                    <a href="{% url 'prescription:change_prescribe' prescription.id %}" class="edit-btn"><i
+                            class="fa-solid fa-pen-to-square"></i></a> <!--Change Old prescription (from
                     old) -->
                     {% endif %}
                     <!-- <button class="edit-btn">Edit</button> -->
@@ -105,14 +117,24 @@
         </button>
     </div>
     {% else %}
-        <div class="btn not-found">
-            <p>Patient not found!</p>
-            <button type="button" class="home-btn">
-                <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
-                        class="fa-solid fa-circle-chevron-left"></i> Go Home</a>
-            </button>
-        </div>      
+    <div class="btn not-found">
+        <p>Patient not found!</p>
+        <button type="button" class="home-btn">
+            <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
+                    class="fa-solid fa-circle-chevron-left"></i> Go Home</a>
+        </button>
+    </div>
     {% endif %}
 </body>
+<script>
+    const searchButton = document.querySelector("#search-button");
+    searchButton.addEventListener("click", (eventObject) => {
+        const dataUrl = eventObject.currentTarget.getAttribute("data-url");
+        const searchBox = document.querySelector("#search-box");
+        const searchQuery = searchBox.value;
+        const searchDataUrl = `${dataUrl}?search=${searchQuery}`;
+        window.location.href = searchDataUrl;
+    })
+</script>
 
 </html>
