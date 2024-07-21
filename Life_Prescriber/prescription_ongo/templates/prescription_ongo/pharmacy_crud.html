@@ -1,88 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pharmacy Crud Activity</title>
+    <link rel="stylesheet" href="{% static './styles/pharmacy_crud.css' %}" type="text/css">
+    <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
-    <div class="link-div">
-        <p>
-            <a href="{% url 'prescription:secret_add_user' %}">Add Staff</a>
-        </p>
-        <p>
-            <a href="{% url 'prescription:secret_delete_user' %}">Delete Staff</a>
-        </p>
-    </div>
-    {% if add_user %}
-        {% if signup_form.errors %}
-            <p>{{add_user_err_msg}}</p>
-        {% endif %}
-        {% if delete_user_success_msg %}
-            <p>{{delete_user_success_msg}}</p>
-        {% endif %}
-        <form action="" method="post">
-            {% csrf_token %}
-            <div>
-                {{signup_form.first_name.label_tag}}
-                {{signup_form.first_name}}
+    <main>
+        <div class="main-form">
+            <div class="main-form-btn">
+                <div class="logo-image">
+                    <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
+                    <p>Life Prescriber™</p>
+                </div>
+                <div class="switch-buttons">
+                    <div class="slider {% if add_user %}move-slider{% else %}move-slider1{% endif %}"
+                        id="slider-button">
+
+                    </div>
+                    <button class="switch-buttons__item" id="sign-in-switch" type="button"
+                        data-url="{% url 'prescription:secret_add_user' %}">Add Staff</button>
+                    <button class="switch-buttons__item" id="register-switch" type="button"
+                        data-url="{% url 'prescription:secret_delete_user' %}">Delete Staff</button>
+                </div>
             </div>
-            <div>
-                {{signup_form.last_name.label_tag}}
-                {{signup_form.last_name}}
-            </div>
-            <div>
-                {{signup_form.username.label_tag}}
-                {{signup_form.username}}
+
+            <div class="forms-div">
+                {% if add_user %}
                 {% if signup_form.errors %}
-                    <p>{{signup_form.errors.username}}</p>
+                <div class="error-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/jxzkkoed.json" trigger="in" stroke="light">
+                        </lord-icon>
+                        <p>{{add_user_err_msg}}</p>
+                    </div>
+                </div>
+
+                {% endif %}
+                {% if delete_user_success_msg %}
+                <div class="success-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/guqkthkk.json" trigger="in">
+                        </lord-icon>
+                        <p>{{delete_user_success_msg}}</p>
+                    </div>
+                </div>
+
+                {% endif %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
+                            {{signup_form.first_name.label_tag}}
+                            {{signup_form.first_name}}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.last_name.label_tag}}
+                            {{signup_form.last_name}}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.username.label_tag}}
+                            {{signup_form.username}}
+                            {% if signup_form.errors %}
+                            <p>{{signup_form.errors.username}}</p>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.email.label_tag}}
+                            {{signup_form.email}}
+                            {% if signup_form.errors %}
+                            <p>{{signup_form.errors.email}}</p>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.designation.label_tag}}
+                            {{signup_form.designation}}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.medical_institution.label_tag}}
+                            {{signup_form.medical_institution}}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.password1.label_tag}}
+                            {{signup_form.password1}}
+                        </div>
+                        <div class="form-group">
+                            {{signup_form.password2.label_tag}}
+                            {{signup_form.password2}}
+                            {% if signup_form.errors %}
+                            <p>{{signup_form.errors.password2}}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="btn">
+                        <div>
+                            <button type="submit" class="submit-btn">
+                                Register<i class="fa-solid fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+                {% if delete_user %}
+                {% if delete_user_error_msg %}
+                <div class="error-form-msg">
+                    <div class="lord-icon-msg">
+                        <lord-icon src="https://cdn.lordicon.com/jxzkkoed.json" trigger="in" stroke="light">
+                        </lord-icon>
+                        <p>{{delete_user_error_msg}}</p>
+                    </div>
+                </div>
+                {% endif %}
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
+                            <label for="username">Username: </label>
+                            <input type="text" name="username" id="username" value={{staff}}>
+                        </div>
+                    </div>
+                    
+                    <div class="btn">
+                        <button type="submit" class="submit-btn">
+                            Remove<i class="fa-solid fa-user-xmark"></i>
+                        </button>
+                    </div>
+                </form>
                 {% endif %}
             </div>
-            <div>
-                {{signup_form.email.label_tag}}
-                {{signup_form.email}}
-                {% if signup_form.errors %}
-                    <p>{{signup_form.errors.email}}</p>
-                {% endif %}
-            </div>
-            <div>
-                {{signup_form.designation.label_tag}}
-                {{signup_form.designation}}
-            </div>
-            <div>
-                {{signup_form.medical_institution.label_tag}}
-                {{signup_form.medical_institution}}
-            </div>
-            <div>
-                {{signup_form.password1.label_tag}}
-                {{signup_form.password1}}
-            </div>
-            <div>
-                {{signup_form.password2.label_tag}}
-                {{signup_form.password2}}
-                {% if signup_form.errors %}
-                    <p>{{signup_form.errors.password2}}</p>
-                {% endif %}
-            </div>
-            <button type="submit">
-                Register Staff
-            </button>
-        </form>
-    {% endif %}
-    {% if delete_user %}
-        {% if delete_user_error_msg %}
-            <p>{{delete_user_error_msg}}</p>
-        {% endif %}
-        <form action="" method="post">
-            {% csrf_token %}
-            <p>
-                <label for="username">Username: </label>
-                <input type="text" name="username" id="username" value={{staff}}>
-            </p>
-            <button type="submit">
-                Remove Staff
-            </button>
-        </form>
-    {% endif %}
+        </div>
+    </main>
 </body>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const slider = document.querySelector(".slider");
+        const signInButton = document.getElementById("sign-in-switch");
+        const registerButton = document.getElementById("register-switch");
+
+        signInButton.addEventListener("click", function () {
+            slider.style.left = signInButton.offsetLeft + "5px";
+            setTimeout(() => {
+                window.location.href = signInButton.getAttribute('data-url');
+            }, 400)
+        });
+
+        registerButton.addEventListener("click", function () {
+            slider.style.left = registerButton.offsetLeft + "px";
+            setTimeout(() => {
+                window.location.href = registerButton.getAttribute('data-url')
+            }, 400);
+        });
+
+    });
+</script>
+
 </html>
