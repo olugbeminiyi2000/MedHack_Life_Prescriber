@@ -41,7 +41,8 @@
                     <button>Active</button>
                     {% endif %}
                     <div id="inner-nav">
-                        <a href="{% url 'prescription:custom_logout' %}"><i class="fa-solid fa-right-from-bracket"></i></a>
+                        <a href="{% url 'prescription:custom_logout' %}"><i
+                                class="fa-solid fa-right-from-bracket"></i></a>
                     </div>
                 </div>
             </div>
@@ -51,70 +52,94 @@
                         <i class="fa-solid fa-hospital"></i>
                     </div>
                     <div id="hospital-text">
-                        <p><span id="parent">Organization</span><br><span id="parent1">{{ custom_logged_user.medical_institution }}</span></p>
+                        <p><span id="parent">Organization</span><br><span id="parent1">{{custom_logged_user.medical_institution }}</span></p>
                     </div>
                 </div>
-                <div id="user-text">
-                    <p><span id="moniker">Username</span><br> <span id="moniker1">{{custom_logged_user.username}}</span></p>
+                <div id="uid">
+                    <div id="user-icon">
+                        <i class="fa-solid fa-user-doctor"></i>
+                    </div>
+                    <div id="user-text">
+                        <p><span id="moniker">Username</span><br> <span id="moniker1">{{custom_logged_user.username}}</span></p>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="forms-div">
-            <div>
+            {% if success_msg or error_msg %}
+            <div id="succ-msg">
                 {% if success_msg %}
-                <p aria-live="assertive" class="msg">{{success_msg}}</p>
+                <p aria-live="assertive" class="msg">{{ success_msg }}</p>
                 {% endif %}
                 {% if error_msg %}
-                <p aria-live="assertive" class="msg">{{error_msg}}</p>
+                <p aria-live="assertive" class="msg">{{ error_msg }}</p>
                 {% endif %}
             </div>
+            {% endif %}
             <form action="{% url 'prescription:secret_search_patient' %}" method="post">
                 {% csrf_token %}
-                <p>
-                    {{insurance_form.insurance_name.label_tag}}
-                    {{insurance_form.insurance_name}}
-                </p>
-                <p>
-                    <label for="insurance_number">
-                        Insurance Number
-                    </label>
-                    <input type="text" name="insurance_number" id="insurance_number" value="{{err_insurance_number}}"
-                        required>
-                </p>
+                <div id="form-fields">
+                    <div id="field1">
+                        <div>
+                            {{ insurance_form.insurance_name.label_tag }}
+                        </div>
+                        <div>
+                            {{ insurance_form.insurance_name }}
+                        </div>
+                    </div>
+                    <div id="field2">
+                        <div>
+                            <label for="insurance_number">
+                                Insurance Number
+                            </label>
+                        </div>
+                        <div>
+                            <input type="text" name="insurance_number" id="insurance_number"
+                                value="{{ err_insurance_number }}" required>
+                        </div>
+                    </div>
+                </div>
                 <button type="submit" class="search_user">
                     Search User
                 </button>
             </form>
-            <div>
-                {% if success_msg %}
-                <h1>Patient</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Username</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
-                            <th>Last Name</th>
-                            <th>Email</th>
-                            <th>Insurance ID</th>
-                            <th>All Prescription</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>{{ patient.username }}</td>
-                            <td>{{ patient.first_name }}</td>
-                            <td>{{ patient.middle_name }}</td>
-                            <td>{{ patient.last_name }}</td>
-                            <td>{{ patient.email }}</td>
-                            <td>{{ patient.insurance_id }}</td>
-                            <td><a href="{% url 'prescription:user_prescription' patient.id %}">go to prescription</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                {% endif %}
+            {% if success_msg %}
+            <div class="table-div">
+                <div id="profile-card">
+                    <div id="card-user">
+                        <h1>{{ patient.username }}</h1>
+                    </div>
+                    <div id="profile-info">
+                        <div id="shorts">
+                            <div id="tags">
+                                <h2>NAME</h2>
+                            </div>
+                            <div id="tags">
+                                <h2>INSURANCE ID</h2>
+                            </div>
+                            <div id="tags">
+                                <h2>E-Mail</h2>
+                            </div>
+                        </div>
+                        <div id="details">
+                            <div class="detail1">
+                                {{ patient.first_name }} {{ patient.middle_name }} {{ patient.last_name }}
+                            </div>
+                            <div class="detail1">
+                                {{ patient.insurance_id }}
+                            </div>
+                            <div class="detail1">
+                                {{ patient.email }}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="prescription-link">
+                        <a href="{% url 'prescription:user_prescription' patient.id %}">Click to view prescription
+                            information</a>
+                    </div>
+                </div>
             </div>
+            {% endif %}
         </div>
     </main>
     <script>

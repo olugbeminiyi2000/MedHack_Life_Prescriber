@@ -1,74 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{% static './styles/user_prescription.css' %}">
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
 </head>
+
 <body>
     {% if patient and all_prescriptions %}
-        <table>
-            <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Drug Name</th>
-                    <th>Drug Use Time</th>
-                    <th>Reminder Time</th>
-                    <th>Start Time Date</th>
-                    <th>Initial Proposed Date</th>
-                    <th>Recent Proposed Date</th>
-                    <th>Total Tablets</th>
-                    <th>Total Tablets Dynamic</th>
-                    <th>No. of Times Per Day</th>
-                    <th>No. of Tablets Per Use</th>
-                    <th>Prescription Form</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{patient_first_name}}</td>
-                    <td>{{patient_last_name}}</td>
-                    <td>New Drug Name</td>
-                    <td>New Drug Use Time</td>
-                    <td>New Reminder Time</td>
-                    <td>New Start Time Date</td>
-                    <td>New Initial Proposed Date</td>
-                    <td>New Recent Proposed Date</td>
-                    <td>New Total Tablets</td>
-                    <td>New Total Tablets Dynamic</td>
-                    <td>New No. of Times Per Day</td>
-                    <td>New No. of Tablets Per Use</td>
-                    <td><a href="{% url 'prescription:new_prescribe' patient.id %}">Make new prescription</a></td>
-                </tr>
-                <!-- Iterate over your prescriptions queryset here -->
-                {% for prescription in all_prescriptions %}
-                    <tr>
-                        <td>{{ prescription.prescribed_user.first_name }}</td>
-                        <td>{{ prescription.prescribed_user.last_name }}</td>
-                        <td>{{ prescription.drug_name }}</td>
-                        <td>{{ prescription.first_time }}</td>
-                        <td>{{ prescription.prescribe_time }}</td>
-                        <td>{{ prescription.start_time }}</td>
-                        <td>{{ prescription.initial_proposed_date }}</td>
-                        <td>{{ prescription.recent_proposed_date }}</td>
-                        <td>{{ prescription.total_tablets }}</td>
-                        <td>{{ prescription.total_tablets_dynamic }}</td>
-                        <td>{{ prescription.no_of_times_per_day }}</td>
-                        <td>{{ prescription.no_of_tablets_per_use }}</td>
-                        {% if prescription.total_tablets_dynamic == 0 %}
-                            <td><a href="{% url 'prescription:prescribe' prescription.id %}">Make new prescription(from old)</a></td>
-                        {% else %}
-                            <td><a href="{% url 'prescription:change_prescribe' prescription.id %}">Change Old prescription(from old)</a></td>
-                        {% endif %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <div>
-            No Prescription(s) found for this user
+    <div class="container">
+        <div class="header">
+            <div class="name-header">
+                <h1>{{ patient_first_name }} {{ patient_last_name }}</h1>
+            </div>
+            <div class="new-prescription-header">
+                <h2><span class="prescription-text">Prescriptions</span></h2>
+                <button class="new-prescription-btn">
+                    <a href="{% url 'prescription:new_prescribe' patient.id %}">Add New<i
+                            class="fa-solid fa-plus"></i></a>
+                </button>
+            </div>
         </div>
+        <div class="prescriptions">
+            <!-- Iterate over your prescriptions queryset here -->
+            {% for prescription in all_prescriptions %}
+            <div class="prescription-card">
+                <!-- <h2>{{ prescription.prescribed_user.first_name }} {{ prescription.prescribed_user.last_name }}</h2> -->
+                <div class="details">
+                    <div class="details-start-date">
+                        <p>{{ prescription.start_time|date:"d" }}</p>
+                        <p>{{ prescription.start_time|date:"M" }}</p>
+                        <p>{{ prescription.start_time|date:"g:i A" }}</p>
+                    </div>
+
+                    <div class="details-tablet">
+                        <div class="drug-name">
+                            <p>{{ prescription.drug_name }}</p>
+                        </div>
+
+                        <div class="drug-time">
+                            <div class="drug-reminder-time">
+                                <img src="{% static './images/reminder.png' %}" alt="reminder">
+                                <p>{{ prescription.prescribe_time }}</p>
+                            </div>
+
+                            <div class="drug-use-time">
+                                <p><i class="fa-solid fa-clock"></i> {{ prescription.first_time }}</p>
+                            </div>
+                        </div>
+
+                        <div class="drug-end-date">
+                            <p><span class="inner-text">End Date: </span>{{ prescription.recent_proposed_date|date:"d" }}</p>
+                            <p>{{ prescription.recent_proposed_date|date:"F" }}</p>
+                        </div>
+
+                        <div class="drug-total-tablets">
+                            <div class="total-pill-tablets">
+                                <p><span class="inner-text">Total Tablet: </span>{{ prescription.total_tablets }}</p>
+                            </div>
+                            <div class="total-tablets-left">
+                                <img src="{% static './images/tablets.png' %}" alt="total_tablets">
+                                <p>{{ prescription.total_tablets_dynamic }}</p>
+                            </div>
+                        </div>
+
+                        <div class="drugs-per-use">
+                            <p><span class="inner-text">Per Day: </span>{{ prescription.no_of_times_per_day }}</p>
+                            <p><span class="inner-text">Per Use: </span>{{ prescription.no_of_tablets_per_use }}</p>
+                        </div>
+                        <!-- <p><strong>Start Time Date:</strong> {{ prescription.start_time }}</p> -->
+
+                        <!-- <p><strong>Initial Proposed Date:</strong> {{ prescription.initial_proposed_date }}</p> -->
+                    </div>
+
+                </div>
+                <div class="actions">
+                    {% if prescription.total_tablets_dynamic == 0 %}
+                    <a href="{% url 'prescription:prescribe' prescription.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a> <!--Make new prescription (from old) -->
+                    {% else %}
+                    <a href="{% url 'prescription:change_prescribe' prescription.id %}" class="edit-btn"><i class="fa-solid fa-pen-to-square"></i></a> <!--Change Old prescription (from
+                    old) -->
+                    {% endif %}
+                    <!-- <button class="edit-btn">Edit</button> -->
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="btn">
+            <button type="button" class="home-btn">
+                <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
+                        class="fa-solid fa-circle-chevron-left"></i> Back Home</a>
+            </button>
+        </div>
+    </div>
+    {% elif patient and not all_prescriptions %}
+    <div class="not-found">
+        <p>No Prescription(s) found for this user</p>
+        <button class="new-prescription-btn">
+            <a href="{% url 'prescription:new_prescribe' patient.id %}">Add New<i class="fa-solid fa-plus"></i></a>
+        </button>
+    </div>
+    {% else %}
+        <div class="btn not-found">
+            <p>Patient not found!</p>
+            <button type="button" class="home-btn">
+                <a href="{% url 'prescription:custom_home' %}" style="text-decoration: none;"><i
+                        class="fa-solid fa-circle-chevron-left"></i> Go Home</a>
+            </button>
+        </div>      
     {% endif %}
 </body>
+
 </html>

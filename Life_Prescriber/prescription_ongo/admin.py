@@ -9,7 +9,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Patient, ClinicUser, Insurance
+from .models import Patient, ClinicUser, Insurance, Prescribe
 
 class PatientAdmin(UserAdmin):
     fieldsets = (
@@ -59,6 +59,13 @@ class InsuranceAdmin(admin.ModelAdmin):
     search_fields = ('insurance_name', )
 
 
+
+class PrescribeAdmin(admin.ModelAdmin):
+    list_display = ('drug_name', 'prescribe_time', 'start_time', 'total_tablets', 'no_of_times_per_day', 'no_of_tablets_per_use')
+    search_fields = ('prescribed_user__username', 'prescribed_user__first_name', 'prescribed_user__last_name', 'prescribed_user__middle_name','drug_name')
+    list_filter = ('prescribe_time', 'start_time', 'initial_proposed_date', 'recent_proposed_date')
+
+admin.site.register(Prescribe, PrescribeAdmin)
 admin.site.register(Insurance, InsuranceAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(ClinicUser, ClinicUserAdmin)

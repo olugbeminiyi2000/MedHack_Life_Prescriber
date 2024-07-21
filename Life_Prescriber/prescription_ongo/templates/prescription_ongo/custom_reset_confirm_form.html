@@ -9,38 +9,39 @@
     </head>
     <body>
         <div class="form-container">
-            <div class="reset-container">
+            <div class="main-form">
                 {% if custom_set_password_form.errors %}
-                    <div>
-                        <p>Password 1 and password 2 don't match</p>
-                        <p>Or choose a strong and unique password to protect your account</p>
-                        <p>at least 8 characters long, containing a mix of letters, numbers, and special characters</p>
-                        <p>and not similar to your first name, last name, email, or username</p>
+                    <div class="reset-error">
+                        <p>* Password 1 and password 2 don't match</p>
+                        <p>* or choose a strong and unique password to protect your account</p>
+                        <p>* at least 8 characters long, containing a mix of letters, numbers, and special characters</p>
+                        <p>* and not similar to your first name, last name, email, or username</p>
                     </div>
                 {% endif %}
-                <div>
+                <div class="form-input">
                     {% load crispy_forms_tags %}
                     <form method="post" action="">
                         {% csrf_token %}
                         {{ custom_password_check_form|crispy }}
-                        <p>
+                        <p class="form-input-details">
                             <label style="display: none;" for="custom_set_password_submit"></label>
                             <input style="display: none;" id="custom_set_password_submit" type="submit" name="custom_set_password_submit" value="custom_password">
                         </p>
-                        <p>
-                            <button id="submit_custom_set_password" type="button">Submit Password Reset</button>
+                        <p class="form-input-btn">
+                            <button id="submit_custom_set_password" type="button" class="submit-btn">Reset Password</button>
                         </p>
                     </form>
+
+                    <div class="back-link-btn">
+                        <p>
+                            <a href="{% url 'prescription:custom_login' %}" class="back-link">
+                                Back to Login
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
         </div> 
-        <div class="text">
-            <p>
-                <a href="{% url 'prescription:custom_login' %}"style="color: orange;">
-                    Back to Login
-                </a>
-            </p>
-        </div>
     </body>
     <script>
         const CustomButton = document.querySelector("#submit_custom_set_password");

@@ -71,25 +71,44 @@ def send_async_email():
         TIMER_URL = generate_prescription_url(prescription_object)
         # Construct the HTML content for the email
         html_content = f"""
-            <div>
-                <div>
-                    <p>This is a reminder from the hospital for you to take your medication at {prescription_object.first_time}.</p>
-                    <p>More details concerning your medication:</p>
-                </div>
-                <div>
-                    <ul>
-                        <li>Total Tablets: {prescription_object.total_tablets}</li>
-                        <li>Number of times per day: {prescription_object.no_of_times_per_day}</li>
-                        <li>Number of tablets to take: {prescription_object.no_of_tablets_per_use}</li>
-                    </ul>
-                </div>
-                <div>
-                    General Description: {prescription_object.general_description}
-                </div>
-                <div>
-                    <p>Click link if prescribed drug has ben used <a href="{TIMER_URL}" target="_blank">Drug Used</a></p>
-                </div>
-            </div>
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Medication Reminder</title>
+                </head>
+                <body style="font-family: Arial, sans-serif; background-color: #f5f5f5; padding: 20px; border-radius: 10px; max-width: 600px; margin: 0 auto;">
+                    <div style="background-color: #345C72; color: white; text-align: center; padding: 20px; font-size: 24px;">
+                        Hi <span style="color: #0c81bb;">{prescription_object.prescribed_user.first_name}</span>, this is a reminder from <span style="color: #0c81bb;">Life Prescriber™</span> to take your medication at {prescription_object.first_time}.
+                    </div>
+                    <div style="background-color: #3690d97a; border: 1px solid #0c81bb; border-radius: 20px; padding: 10px; margin-top: 20px;">
+                        <h2 style="margin: 0; text-decoration: underline;">Prescription Details</h2>
+                        <p><strong>Total tablets:</strong> {prescription_object.total_tablets}</p>
+                        <p><strong>Number of dose(s) per day:</strong> {prescription_object.no_of_times_per_day}</p>
+                        <p style="margin-bottom: 0;"><strong>Number of tablets per dose:</strong> {prescription_object.no_of_tablets_per_use}</p>
+                    </div>
+                    <div style="background-color: #3690d97a; border: 1px solid #0c81bb; border-radius: 20px; padding: 10px; margin-top: 20px;">
+                        <h2 style="font-weight: bold; text-decoration: underline; margin: 0;">General description</h2>
+                        <p style="margin: 0; padding-top: 5px;">{prescription_object.general_description}</p>
+                    </div>
+                    <div style="padding-top: 25px; text-align: center;">
+                        Click <a href="{TIMER_URL}" target="_blank" style="color: #0c81bb; text-decoration: none;">here</a> if the prescribed dose has been completed.
+                    </div>
+                    <div style="display: flex; align-items: center; padding-top: 25px; text-align: center;">
+                        <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; width: 75px; height: 75px;">
+                            <img src="static/images/logo_placeholder.png" alt="logo" style="height: 100%; width: 100%;">
+                        </div>
+                        <div style="display: flex; flex-direction: column; line-height: 5px; text-align: center;">
+                            <h2 style="font-size: 30px; margin: 0;"><span style="color: #0c81bb;">Life Prescriber™</span></h2>
+                            <p style="color: #0c81bb; margin: 0;">...your medication on the go!</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; font-size: 12px; color: #882b2b; margin-top: -10px;">
+                        © 2024 Life Prescriber™. All rights reserved.
+                    </div>
+                </body>
+                </html>
         """
 
         # Create an EmailMessage with the HTML content
