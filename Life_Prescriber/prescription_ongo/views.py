@@ -226,7 +226,7 @@ class DrugUsedView(View):
     template_name = "prescription_ongo/"
     def get(self, request, token):
         try:
-            signed_value = SIGNER.unsign(token, max_age=timedelta(minutes=15))
+            signed_value = SIGNER.unsign(token, max_age=timedelta(minutes=30))
             username, id = signed_value.split(":")
             # TODO decrease the ttd by the number of tablets per take
             # by using the username to get patient and with id to get drug
