@@ -169,11 +169,9 @@ class CustomPasswordResetWarning(View):
     
     def get(self, request):
         context = {}
-        context["error_message"] = request.session.get("error_message", "You shouldn't be here 😐")
-        context["password_reset_email"] = request.session.get("password_reset_email", "")
+        context["error_message"] = request.session.get("error_message", "You shouldn't be here User :|")
         if "error_message" in request.session:
             del request.session["error_message"]
-            del request.session["password_reset_email"]
         return render(request, self.template_name, context)
 
 
@@ -182,11 +180,9 @@ class CustomBan(View):
 
     def get(self, request):
         context = {}
-        context["error_message"] = request.session.get("error_message", "You have been blocked from accessing this page 😐")
-        context["password_reset_email"] = request.session.get("password_reset_email", "")
+        context["error_message"] = request.session.get("error_message", "You shouldn't be here User :|")
         if "error_message" in request.session:
             del request.session["error_message"]
-            del request.session["password_reset_email"]
         return render(request, self.template_name, context)
 
 class CustomResetDone(View):
@@ -276,8 +272,7 @@ class CustomPasswordReset(View):
             email=get_email_address,
         ).exists()
         if not check_email_address_exists:
-            request.session["error_message"] = f'The email address "{get_email_address}" doesn\'t exist.'
-            request.session["password_reset_email"] = "password_reset_email"
+            request.session["error_message"] = f"The user with email address {get_email_address} doesn't exist."
             warning_page_url = reverse("prescription:custom_password_reset_warning")
             return redirect(warning_page_url)
 
@@ -286,15 +281,13 @@ class CustomPasswordReset(View):
             email=get_email_address,
         ).first()
         if not check_user_still_active.is_active:
-            request.session["error_message"] = f"The email address {get_email_address} has been blocked"
-            request.session["password_reset_email"] = "password_reset_email"
+            request.session["error_message"] = f"The user with email address {get_email_address} has been blocked"
             ban_page_url = reverse("prescription:custom_ban")
             return redirect(ban_page_url)
 
         # 3. check if user has usable password
         if not check_user_still_active.has_usable_password():
-             request.session["error_message"] = f"The email address {get_email_address} has no password"
-             request.session["password_reset_email"] = "password_reset_email"
+             request.session["error_message"] = f"The user with email address {get_email_address} has no password"
              warning_page_url = reverse("prescription:custom_password_reset_warning")
              return redirect(warning_page_url)
 
@@ -325,7 +318,7 @@ class SecretClinicUserAdd(View):
         signup_form = ClinicUserCreationForm(request.POST)
         # validate form
         if not signup_form.is_valid():
-            context_dict["add_user_err_msg"] = "An error occured in the form. Check form."
+            context_dict["add_user_err_msg"] = "An error occured in the form check form."
             context_dict["signup_form"] = signup_form
             return render(request, self.template_name, context_dict)
         # if form is valid save the form to database
@@ -374,13 +367,13 @@ class SecretClinicUserDelete(View):
             username=get_username,
         )
         if not check_if_user_exists.exists():
-            context_dict["delete_user_error_msg"] = f"This username {get_username} doesn't exist."
+            context_dict["delete_user_error_msg"] = f"This staff with username {get_username} doesn't exist."
             context_dict["staff"] = get_username
             return render(request, self.template_name, context_dict)
         
         
         # add message to session
-        request.session["delete_user_success_msg"] = f"{check_if_user_exists.first().first_name} {check_if_user_exists.first().last_name} successfully deleted..."
+        request.session["delete_user_success_msg"] = f"User {check_if_user_exists.first().first_name} {check_if_user_exists.first().last_name} successfully deleted..."
 
         # if user exists remove user from database
         ClinicUser.objects.filter(
@@ -425,10 +418,10 @@ class PharmacySecretSearch(View):
             # now get the id of that patient and save a success message
             patient_id = check_if_user_exist.first().id
             request.session["patient_id"] = patient_id
-            request.session["success_msg"] = f'Insurance number "{insurance_id}" exists.'
+            request.session["success_msg"] = f"User with insurance_number {insurance_id} exists."
             return redirect("prescription:custom_home")
         else:
-            request.session["error_msg"] = f"User doesn't exist. Create a new user or Retry."
+            request.session["error_msg"] = f"User doesn't exist, create a new user or retry again."
             request.session["insurance_name"] = get_insurance_name
             request.session["insurance_number"] = get_insurance_number
             return redirect("prescription:custom_home")
@@ -468,9 +461,21 @@ class UserPrescription(View):
             
             context_dict["patient"] = patient
 
+            # extract the search query incase it was given
+            # and use it to filter the prescription
+            search_query = request.GET.get("search", "")
+            
             all_prescriptions = Prescribe.objects.filter(
                 prescribed_user=patient,
+                drug_name__istartswith=search_query,
             ).all().order_by("-start_time")
+            
+            if not all_prescriptions and search_query:
+                all_prescriptions = Prescribe.objects.filter(
+                    prescribed_user=patient,
+                    drug_name__istartswith="",
+                ).all().order_by("-start_time")
+
             context_dict["all_prescriptions"] = all_prescriptions
             return render(request, self.template_name, context_dict)
                 
