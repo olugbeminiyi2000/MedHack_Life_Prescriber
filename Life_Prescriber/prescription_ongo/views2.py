@@ -148,7 +148,7 @@ class CustomLogin(View):
         context = {}
         custom_login_form = ClinicUserLoginForm(request.POST)
         context["custom_login_form"] = custom_login_form
-        message = "Incorrect details password or username_email wrong or you are not a user on the platform"
+        message = "Incorrect password, username or email or you are not a user on the platform"
         context["error_message"] = message
         return render(request, self.template_name, context)
 

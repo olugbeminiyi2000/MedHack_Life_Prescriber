@@ -309,7 +309,6 @@ lord-icon {
     border-radius: 9px;
     border: none;
     color: #fff;
-    background-color: #0c81bb;
     position: relative;
     overflow: hidden;
     transition: background-color 0.3s ease-in-out;
@@ -345,6 +344,14 @@ lord-icon {
 .btn .submit-btn:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);
+}
+
+.btn .add-btn {
+    background-color: #0c81bb;
+}
+
+.btn .remove-btn {
+    background-color: #a52a2a;
 }
 
 
