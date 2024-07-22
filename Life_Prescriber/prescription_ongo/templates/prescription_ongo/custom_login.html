@@ -3,38 +3,39 @@
 
 <head>
     {% load static %}
-    <title>Clinic User Secure Login</title>
+    <title>Login</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="{% static './styles/custom_login.css' %}" />
-    <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}" />
+    <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}" />
 </head>
 
 <body>
     {% load crispy_forms_tags %}
     {% include 'prescription_ongo/messages.html' %}
-    {% if error_message %}
-    <div class="Error">
-        <p>{{error_message}}</p>
-    </div>
-    {% endif %}
-    {% if success_message %}
-        <div class="Success">
-            <p>{{success_message}}</p>
-        </div>
-    {% endif %}
     <div class="form-container">
         {% load crispy_forms_tags %}
         <div id="logo-div">
             <img src="{% static '/images/logo_placeholder.png' %}" alt="logo" id="logo">
         </div>
         <div class="form-elements">
-                <h2>Welcome to <span>Life Prescriber™</span></h2>
-                <p><span>...your medication on the go!</span></p>
+            <h2>Welcome to <span>Life Prescriber™</span></h2>
+            <p><span>...your medication on the go!</span></p>
         </div>
+        {% if error_message %}
+        <div class="Error">
+            <p>{{error_message}}</p>
+        </div>
+        {% endif %}
+        {% if success_message %}
+        <div class="Success">
+            <p>{{success_message}}</p>
+        </div>
+        {% endif %}
         <form class="form-elements1" method="post" action="{% url 'prescription:custom_login' %}">
             {% csrf_token %}
+
             {{ custom_login_form|crispy }}
             <p id="forgot-password">
                 <a href="{% url 'prescription:custom_password_reset' %}">
@@ -45,9 +46,12 @@
                 <label style="display: none" for="custom_signin"></label>
                 <input style="display: none" id="custom_signin" type="submit" name="custom_signin" value="signin" />
             </p>
-            <p id="signin-button">
-                <button id="signin_custom" type="button">Log In</button>
-            </p>
+            <div class="btn">
+                <div>
+                    <button id="signin_custom" type="button">Login</button>
+                </div>
+            </div>
+
         </form>
     </div>
 </body>

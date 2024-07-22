@@ -3,12 +3,13 @@
 
 <head>
     {% load static %}
-    <title>Health Practitioner Page</title>
+    <title>Life Prescriber Homepage</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="{% static './images/loading1.png' %}">
     <link rel="stylesheet" href="{% static './styles/custom_home.css' %}">
+    <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
     <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </head>
 
 <body>
@@ -33,7 +34,7 @@
                         <h1>Hi, welcome back!</h1>
                         <p><span id="names">{{custom_logged_user.first_name}} {{custom_logged_user.last_name}}</span>
                         </p>
-                        <p><span id="designation">{{custom_logged_user.designation}}</span></p>
+                        <p class="designation"><span id="designation">{{custom_logged_user.designation}}</span></p>
                     </div>
                 </div>
                 <div id="active">
@@ -52,7 +53,9 @@
                         <i class="fa-solid fa-hospital"></i>
                     </div>
                     <div id="hospital-text">
-                        <p><span id="parent">Organization</span><br><span id="parent1">{{custom_logged_user.medical_institution }}</span></p>
+                        <p><span id="parent">Organization</span></p>
+                        <p id="parent1">{{custom_logged_user.medical_institution }}</span>
+                                
                     </div>
                 </div>
                 <div id="uid">
@@ -60,7 +63,9 @@
                         <i class="fa-solid fa-user-doctor"></i>
                     </div>
                     <div id="user-text">
-                        <p><span id="moniker">Username</span><br> <span id="moniker1">{{custom_logged_user.username}}</span></p>
+                        <p><span id="moniker">Username</span></p>
+                        <p id="moniker1">{{custom_logged_user.username}}</span></p>
+                                
                     </div>
                 </div>
             </div>
@@ -69,10 +74,10 @@
             {% if success_msg or error_msg %}
             <div id="succ-msg">
                 {% if success_msg %}
-                <p aria-live="assertive" class="msg">{{ success_msg }}</p>
+                <p aria-live="assertive" class="msg success-msg">{{ success_msg }}</p>
                 {% endif %}
                 {% if error_msg %}
-                <p aria-live="assertive" class="msg">{{ error_msg }}</p>
+                <p aria-live="assertive" class="msg err-msg">{{ error_msg }}</p>
                 {% endif %}
             </div>
             {% endif %}
@@ -90,7 +95,7 @@
                     <div id="field2">
                         <div>
                             <label for="insurance_number">
-                                Insurance Number
+                                Insurance Number:
                             </label>
                         </div>
                         <div>
@@ -107,18 +112,22 @@
             <div class="table-div">
                 <div id="profile-card">
                     <div id="card-user">
-                        <h1>{{ patient.username }}</h1>
+                        <lord-icon src="https://cdn.lordicon.com/fmasbomy.json" trigger="loop"
+                        delay="2000" stroke="light"
+                            state="hover-looking-around">
+                        </lord-icon>
+                        <!-- <h1>{{ patient.username }}</h1> -->
                     </div>
                     <div id="profile-info">
                         <div id="shorts">
                             <div id="tags">
-                                <h2>NAME</h2>
+                                <h2>Name:</h2>
                             </div>
                             <div id="tags">
-                                <h2>INSURANCE ID</h2>
+                                <h2>Insurance ID:</h2>
                             </div>
                             <div id="tags">
-                                <h2>E-Mail</h2>
+                                <h2>E-mail:</h2>
                             </div>
                         </div>
                         <div id="details">
@@ -134,8 +143,7 @@
                         </div>
                     </div>
                     <div id="prescription-link">
-                        <a href="{% url 'prescription:user_prescription' patient.id %}">Click to view prescription
-                            information</a>
+                        <a href="{% url 'prescription:user_prescription' patient.id %}">View Prescriptions</a>
                     </div>
                 </div>
             </div>

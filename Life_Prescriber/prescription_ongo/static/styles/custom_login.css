@@ -13,6 +13,26 @@ body {
     background-color: #fefefeef;
 }
 
+.Error {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #a52a2a;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.Error p {
+    width: 80%;
+}
+
+.Success {
+    margin-top: 0.1rem;
+    margin-bottom: 1rem;
+    color: #0ca04a;
+}
+
 .form-container {
     display: flex;
     flex-direction: column;
@@ -101,6 +121,7 @@ span.asteriskField {
 
 input {
     background: #3690d97a;
+    width: 100%;
     height: 40px;
     font-size: 1.5rem;
     border: 1px solid #0c81bb;
@@ -118,27 +139,67 @@ input {
     padding-top: 8px;
     padding-right: 10px;
 }
+
 #forgot-password a {
     text-decoration: none;
     color: black;
 }
 
+#forgot-password a:hover {
+    text-decoration: underline;
+    color: #c07d02;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 2rem;
+}
+
 #signin_custom {
-    height: 30px;
-    width: 100px;
-    border: 1px solid #0c81bb;
-    border-radius: 18px;
-    background: #0c81bb;
-    font-size: 1.3rem;
-    font-weight: 500;
-    color: beige;
+    /* padding: 0.9rem 2rem; */
+    height: 44px;
+    width: 170px;
+    font-size: 1.5rem;
+    border-radius: 9px;
+    border: none;
+    color: #fff;
+    background-color: #0c81bb;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
 }
 
-#signin-button {
-    padding: 25px 100px;
-    text-align: center;
+#signin_custom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    transition: all 0.5s ease;
+    animation: slide 2s linear infinite;
 }
 
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+#sigin_custom:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
 /* Message styling */
 .messages {
