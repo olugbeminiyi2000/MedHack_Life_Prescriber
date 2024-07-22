@@ -103,7 +103,7 @@ def send_async_email():
                     <div style="padding-top: 25px; text-align: center;">
                         Click <a href="{TIMER_URL}" target="_blank" style="color: #0c81bb; text-decoration: none;">here</a> if the prescribed dose has been completed.
                     </div>
-                    <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; padding-top: 25px;">
+                    <div style="display: flex; margin-top: 25px; flex-direction: row; justify-content: center; align-items: center;">
                         <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap; width: 75px; height: 75px;">
                             <img src="https://ik.imagekit.io/v9ifwedhf/logo_placeholder.png?updatedAt=1721578508528" alt="logo" style="height: 100%; width: 100%;">
                         </div>
