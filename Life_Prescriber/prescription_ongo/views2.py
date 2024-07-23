@@ -28,7 +28,7 @@ def custom_send_password_reset_link(custom_user):
     token = token_generator.make_token(custom_user)
 
     # Construct the password reset URL
-    reset_url = f'http://127.0.0.1:8000/prescription_ongo/custom_reset/{uidb64}/{token}/'
+    reset_url = f'https://turingmachines.pythonanywhere.com/prescription_ongo/custom_reset/{uidb64}/{token}/'
 
     # # Construct the email subject and body
     subject = "Life Prescriber Clinic User Password Reset"
