@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import ClinicUser
+from .models import ClinicUser, OneTimeLink
 from django.views import View
 from .models import Patient, Prescribe
 from .forms import PatientForm, PrescribeForm, SecretInsuranceRegisterForm, SecretPatientRegisterForm
@@ -224,9 +224,14 @@ class PrescribeView(View):
 
 class DrugUsedView(View):
     template_name = "prescription_ongo/"
-    def get(self, request, token):
+    def get(self, request, timer_token, clicked_token):
         try:
-            signed_value = SIGNER.unsign(token, max_age=timedelta(minutes=30))
+            signed_value = SIGNER.unsign(timer_token, max_age=timedelta(minutes=30))
+            # check if the link has been clicked, if clicked already return an error template
+            one_time_link = OneTimeLink.objects.get(token=clicked_token)
+            if one_time_link.used:
+                return render(request, self.template_name + 'prescribe_link_used.html')
+            
             username, id = signed_value.split(":")
             # TODO decrease the ttd by the number of tablets per take
             # by using the username to get patient and with id to get drug
@@ -242,12 +247,20 @@ class DrugUsedView(View):
             if not get_patient or not get_drug:
                 return render(request, self.template_name + 'prescribe_error.html')
             
+            
             get_total_tablets_dynamic = get_drug.total_tablets_dynamic
             get_no_of_tablets_per_use = get_drug.no_of_tablets_per_use
             new_total_tablets_dynamic = get_total_tablets_dynamic - get_no_of_tablets_per_use
 
             get_drug.total_tablets_dynamic = new_total_tablets_dynamic
             get_drug.save()
+
+            # now after drug has been saved make the link to be used already
+            # Mark the link as used
+            one_time_link.used = True
+            one_time_link.save()
+
+            # now render a success template
             return render(request, self.template_name + 'drug_used.html')
         except (BadSignature, SignatureExpired):
             return render(request, self.template_name + 'link_expired.html')
