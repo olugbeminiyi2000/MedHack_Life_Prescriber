@@ -1,8 +1,8 @@
-
+import os
+from dotenv import load_dotenv
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
-# from django.http import HttpResponse
-# from django.utils.http import urlencode
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -19,6 +19,8 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 # Create your views here.
 
+load_dotenv()
+
 def custom_send_password_reset_link(custom_user):
     # Generate a password reset token
     token_generator = PasswordResetTokenGenerator()
@@ -28,7 +30,12 @@ def custom_send_password_reset_link(custom_user):
     token = token_generator.make_token(custom_user)
 
     # Construct the password reset URL
-    reset_url = f'https://turingmachines.pythonanywhere.com/prescription_ongo/custom_reset/{uidb64}/{token}/'
+    if settings.DEBUG:
+        SITE_URL = os.getenv("LOCAL_HOST")
+    else:
+        SITE_URL = os.getenv("WEB_HOST")
+
+    reset_url = f'{SITE_URL}/prescription_ongo/custom_reset/{uidb64}/{token}/'
 
     # # Construct the email subject and body
     subject = "Life Prescriber Clinic User Password Reset"

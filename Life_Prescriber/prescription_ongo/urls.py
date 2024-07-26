@@ -9,7 +9,7 @@ urlpatterns = [
     path('prescribe/<int:prescription_id>', views.PrescribeView.as_view(), name="prescribe"),
     path('new_prescribe/<int:patient_id>', views.NewPrescribeView.as_view(), name="new_prescribe"),
     path('change_prescribe/<int:prescription_id>', views.ChangePrescribeView.as_view(), name="change_prescribe"),
-    path('drug_used/<str:timer_token>/<uuid:clicked_token/', views.DrugUsedView.as_view(), name="drug_used"),
+    path('drug_used/<str:timer_token>/<uuid:clicked_token>', views.DrugUsedView.as_view(), name="drug_used"),
 
     # clinic user authentication
     path("custom_login/", views2.CustomLogin.as_view(template_name="prescription_ongo/custom_login.html"), name="custom_login"),
