@@ -14,6 +14,11 @@
 
 <body>
     <main>
+        {% if first_get_request %}
+        <div>
+            Search or Register Patient
+        </div>
+        {% endif %}
         <div class="main-form">
             <div class="main-form-btn">
                 <div class="logo-image">
@@ -26,9 +31,9 @@
 
                     </div>
                     <button class="switch-buttons__item" id="sign-in-switch" type="button"
-                        data-url="{% url 'prescription:secret_search' %}">Search</button>
+                        data-url="{% url 'prescription:secret_search' secret_search %}">Search</button>
                     <button class="switch-buttons__item" id="register-switch" type="button"
-                        data-url="{% url 'prescription:secret_signup' %}">Register</button>
+                        data-url="{% url 'prescription:secret_signup' secret_signup %}">Register</button>
                 </div>
             </div>
 
@@ -73,7 +78,8 @@
                     </div>
                     <div class="btn">
                         <div>
-                            <button type="submit" class="submit-btn">Search<i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type="submit" class="submit-btn">Search<i
+                                    class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                     <!-- <button type="submit">

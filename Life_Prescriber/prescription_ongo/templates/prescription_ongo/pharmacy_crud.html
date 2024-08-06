@@ -14,6 +14,11 @@
 
 <body>
     <main>
+        {% if first_get_request %}
+        <div>
+            Add or Remove Pharmacist
+        </div>
+        {% endif %}
         <div class="main-form">
             <div class="main-form-btn">
                 <div class="logo-image">
@@ -26,9 +31,9 @@
 
                     </div>
                     <button class="switch-buttons__item" id="sign-in-switch" type="button"
-                        data-url="{% url 'prescription:secret_add_user' %}">Add Staff</button>
+                        data-url="{% url 'prescription:secret_add_user' secret_add_user %}">Add Staff</button>
                     <button class="switch-buttons__item" id="register-switch" type="button"
-                        data-url="{% url 'prescription:secret_delete_user' %}">Delete Staff</button>
+                        data-url="{% url 'prescription:secret_delete_user' secret_delete_user %}">Delete Staff</button>
                 </div>
             </div>
 

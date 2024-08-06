@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=div, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% include 'prescription_ongo/messages.html' %}
+    <div>
+        Are you a pharmacy or hospital
+    </div>
+    <div>
+        {% if error_message %}
+            <p>{{error_message}}</p>
+        {% endif %}
+        <form method="post" action="{% url 'prescription:general_home' %}">
+            {% csrf_token %}
+            <div>
+                <label for="clinic_username_or_email">
+                    username or email
+                </label>
+                <input type="text" name="username_or_email" id="clinic_username_or_email">
+            </div>
+            <div>
+                <label for="clinic_password">
+                    password
+                </label>
+                <input type="password" name="password" id="clinic_password">
+            </div>
+            <div>
+                <button type="submit">
+                    Verify details
+                </button>
+            </div>
+        </form>
+    </div>
+    {% if success_message %}
+        <div>
+            <div>
+                <a href="{% url 'prescription:secret_search' clinic_timer_token %}">
+                    Check Patient
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'prescription:secret_add_user' pharmacy_timer_token %}">
+                    Check Pharmacist
+                </a>
+            </div>
+        </div>
+    {% endif %}
+    <div>
+        <a href="{% url 'prescription:custom_home' %}">clinicial portal</a>
+    </div>
+</body>
+</html>
