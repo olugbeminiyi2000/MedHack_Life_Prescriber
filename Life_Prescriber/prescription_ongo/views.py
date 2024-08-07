@@ -484,7 +484,7 @@ class HospitalSecretSearch(View):
 
             return render(request, self.template_name, context_dict)
         except (BadSignature, SignatureExpired):
-            return render(request, self.template_name_short + 'link_expired.html')
+            return render(request, self.template_name_short + 'general_link_expired.html')
 
 
     def post(self, request, timer_token):
@@ -568,7 +568,7 @@ class HospitalSecretSignUp(View):
 
             return render(request, self.template_name, context_dict)
         except (BadSignature, SignatureExpired):
-            return render(request, self.template_name_short + 'link_expired.html')
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
     def post(self, request, timer_token):
         # now create a timer token for the hospital signup and search
@@ -839,11 +839,14 @@ class GeneralHomeView(View):
             context["success_message"] = request.session["clinicial_found_msg"]
             context["clinic_timer_token"] = clinic_timer_token
             context["pharmacy_timer_token"] = pharmacy_timer_token
-
+            
             del request.session["clinicial_found_msg"]
-        if request.session.get("error_message", None):
+        elif request.session.get("error_message", None):
             context["error_message"] = request.session["error_message"]
             del request.session["error_message"]
+
+        else:
+            context["first_get_request"] = "first_get_request"
 
         return render(request, self.template_name, context)
 
@@ -866,14 +869,14 @@ class GeneralHomeView(View):
             # then make the user active
             if authenticate_user.is_active:
                 # display a flash message for successful clinicial found
-                messages.success(request, "Clinicial found... 😎")
+                messages.success(request, "Clinician Verified ✔")
                 request.session["clinicial_found_msg"] = "clinicial found"
                 return redirect(request.path)
             else:
                 # redirect to the user has been blocked
                 return redirect(reverse("prescription:custom_ban"))
         else:
-            request.session["error_message"] = "username, email, or password is wrong and all are case sensitive 🥲"
-            messages.error(request, "Clinicial not found... 😿")
+            request.session["error_message"] = "Username, Email, or Password is wrong and all are case sensitive "
+            messages.error(request, "Clinician not found ✖")
             return redirect(request.path)
         

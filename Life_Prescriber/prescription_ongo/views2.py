@@ -333,11 +333,16 @@ class SecretClinicUserAdd(View):
 
             return render(request, self.template_name, context_dict)
         except (BadSignature, SignatureExpired):
-            return render(request, self.template_name_short + 'link_expired.html')
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
     def post(self, request, timer_token):
+        # now create a timer token for the pharmacy add user and delete user
+        pharmacy_timer_token_1 = generate_secret_url("secret_add_user")
+        pharmacy_timer_token_2 = generate_secret_url("secret_delete_user")
         context_dict = {}
         context_dict["add_user"] = "add_user"
+        context_dict["secret_add_user"] = pharmacy_timer_token_1
+        context_dict["secret_delete_user"] = pharmacy_timer_token_2
         # get the request.POST data inorder to validate it
         signup_form = ClinicUserCreationForm(request.POST)
         # validate form
@@ -394,7 +399,7 @@ class SecretClinicUserDelete(View):
             return render(request, self.template_name, context_dict)
 
         except (BadSignature, SignatureExpired):
-            return render(request, self.template_name_short + 'link_expired.html')
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
     def post(self, request, timer_token):
         # now create a timer token for the pharmacy add user and delete user

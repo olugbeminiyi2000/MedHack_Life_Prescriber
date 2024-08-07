@@ -2,12 +2,12 @@
 <div class="messages space-y-4">
     {% for message in messages %}
         {% if 'success' in message.tags %}
-            <div class="alert" role="alert">
-                <span>Success {{ message }}</span>
+            <div class="alert success-msg" role="alert">
+                <span>Success: {{ message }}</span>
             </div>
         {% elif 'error' in message.tags %}
-            <div class="alert" role="alert">
-                <span>Error {{ message }}</span>
+            <div class="alert err-msg" role="alert">
+                <span>Error: {{ message }}</span>
             </div>
         {% endif %}
     {% endfor %}

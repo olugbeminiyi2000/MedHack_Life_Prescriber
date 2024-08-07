@@ -14,16 +14,16 @@
 
 <body>
     <main>
-        {% if first_get_request %}
-        <div>
-            Search or Register Patient
-        </div>
-        {% endif %}
         <div class="main-form">
             <div class="main-form-btn">
                 <div class="logo-image">
                     <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
                     <p>Life Prescriber™</p>
+                    {% if first_get_request %}
+                    <div class="logo-notification">
+                        Search or Register Patient
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="switch-buttons">
                     <div class="slider {% if search_user %}move-slider{% else %}move-slider1{% endif %}"
@@ -60,6 +60,14 @@
                     <p class="error-search-msg">Click the <span class="inner-error-text">"Search"</span> button to
                         display form</p>
                 </div>
+                {% endif %}
+                {% if success_msg or error_msg %}
+                    <div class="btn">
+                        <button type="button" class="home-btn">
+                            <a href="{% url 'prescription:general_home' %}" style="text-decoration: none;"><i
+                                    class="fa-solid fa-circle-chevron-left"></i> Back</a>
+                        </button>
+                    </div>
                 {% endif %}
                 {% if not msg %}
                 <form action="" method="post">
@@ -110,6 +118,14 @@
                     <p class="success-search-msg">Click the <span class="inner-success-text">"Register"</span> button to
                         display form</p>
                 </div>
+                {% endif %}
+                {% if sign_success_msg or sign_error_msg %}
+                    <div class="btn">
+                        <button type="button" class="home-btn">
+                            <a href="{% url 'prescription:general_home' %}" style="text-decoration: none;"><i
+                                    class="fa-solid fa-circle-chevron-left"></i> Back</a>
+                        </button>
+                    </div>
                 {% endif %}
                 {% if not sign_msg %}
                 <form action="" method="post">

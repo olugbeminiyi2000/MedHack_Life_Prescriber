@@ -50,13 +50,23 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 3rem;
-    margin-bottom: 4rem;
+    /* margin-top: 3rem; */
+    margin-bottom: 1rem;
+}
+
+.main-form .logo-image img {
+    width: 4rem;
+    height: 4rem;
 }
 
 .main-form .logo-image p {
     color: #0d81bc;
-    font-size: 2rem;
+    font-size: 1.2rem;
+}
+
+.logo-notification {
+    margin: 3rem 0 3rem 0;
+    color: #0ca04a;
 }
 
 .switch-buttons {
@@ -343,6 +353,70 @@ lord-icon {
 }
 
 .btn .submit-btn:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Home btn */
+.btn {
+    margin-top: 2rem;
+}
+
+.btn .home-btn {
+    padding: 0.5rem 2rem;
+    width: fit-content;
+    font-size: 1rem;
+    border-radius: 0.3rem;
+    border: none;
+    color: #fff;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn .home-btn {
+    position: relative;
+    overflow: hidden;
+    width: fit-content;
+    margin-bottom: 4rem;
+    background-color: #a52a2a;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn .home-btn a {
+    text-decoration: none;
+    color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.btn .home-btn i {
+    color: #fff;
+    padding-right: 0.2rem;
+}
+
+.btn .home-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 20%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+    z-index: 1;
+    transition: all 0.5s ease;
+    animation: slide 2s linear infinite;
+}
+
+@keyframes slide {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.btn .home-btn:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);
 }
