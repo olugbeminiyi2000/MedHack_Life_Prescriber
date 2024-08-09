@@ -137,11 +137,6 @@ app.conf.beat_schedule = {
 app.conf.task_default_queue = 'default'
 ```
 
-
-## Contributing
-
-We welcome contributions! Please see our [CONTRIBUTING.md](CONTRIBUTING.md) file for more details.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
@@ -150,7 +145,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ### Additional Included Files
 
-1. *CONTRIBUTING.md*: Guidelines for contributing to the project.
-2. *LICENSE*: The licensing information for the project.
-3. *requirements.txt*: List of dependencies required to run the project.
-4. *.gitignore*: Specifies files and directories to be ignored by Git.
+1. *LICENSE*: The licensing information for the project.
+2. *requirements.txt*: List of dependencies required to run the project.
+3. *.gitignore*: Specifies files and directories to be ignored by Git.
