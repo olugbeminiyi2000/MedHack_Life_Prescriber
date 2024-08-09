@@ -76,31 +76,24 @@ Test Clinician Login Credentials:
 ### Setup
 
 1. *Create and activate a virtual environment:*
-   <pre>
-      ```bash
+      ```sh
       python -m venv your_virtual_environment_name
       source venv/bin/activate   # On Windows use `your_virtual_environment_name\Scripts\activate`
       ```
-   </pre>
 
 3. *Clone the repository:*
-   <pre>
-      ```bash
+      ```sh
       git clone https://github.com/olugbeminiyi2000/MedHack_Life_Prescriber.git
       cd MedHack_Life_Prescriber/
       ```
-   </pre>
-
+      
 5. *Install dependencies:*
-   <pre>
-      ```bash
+      ```sh
       pip install -r requirements.txt
       ```
-   </pre>   
 
 7. *Set up the Django project:*
-   <pre>
-      ```bash
+      ```sh
       cd Life_Prescriber
       code/vi settings.py # adjust settings.py making DEBUG=True, EMAIL_HOST_USER to your test email adress, and finally set EMAIL_HOST_PASSWORD using google SMTP Authentication.
       python manage.py makemigrations
@@ -109,17 +102,14 @@ Test Clinician Login Credentials:
       python manage.py check
       python manage.py runserver
       ```
-   </pre>
 
 9. *Set up Celery:*
    - open up 2 command line interface at vscode terminal Launch Profile.
    - then change directory to MedHack_Life_Prescriber/Life_Prescriber/ if not there.
-   <pre>
-      ```bash
+      ```sh
       celery -A Life_Prescriber worker --pool=solo -l INFO
       celery -A Life_Prescriber beat -l INFO
       ```
-   </pre>
 
 ## Usage
 
@@ -129,69 +119,64 @@ Test Clinician Login Credentials:
 
 ## Configuration
 ## django admin/sites.py configuration !important
-<pre>
-   ```bash
+   ```sh
    code\vi your_python_virtual_env/Lib/sites-packages/django/contrib/admin/sites.py
    ```
-</pre>
-<pre>
-```python
-# sites.py
-# add this to where all modules are imported really !important
-from django.contrib.auth import get_user_model, logout
-
-# then at login function
-    @method_decorator(never_cache)
-    def login(self, request, extra_context=None):
-        """
-        Display the login form for the given HttpRequest.
-        """
-        if request.method == "GET" and self.has_permission(request):
-            # Already logged-in, redirect to admin index
-            index_path = reverse("admin:index", current_app=self.name)
-            return HttpResponseRedirect(index_path)
-         
-        """
-        Very Important! check if the user trying to login is not of the settings.AUTH_USER_MODEL
-        """
-        SETTINGS_USER = get_user_model()
-        if request.user.is_authenticated and not isinstance(request.user, SETTINGS_USER):
-            logout(request)**
-
-        # Since this module gets imported in the application's root package,
-        # it cannot import models from other applications at the module level,
-        # and django.contrib.admin.forms eventually imports User.
-        from django.contrib.admin.forms import AdminAuthenticationForm
-        from django.contrib.auth.views import LoginView
-
-        context = {
-            **self.each_context(request),
-            "title": _("Log in"),
-            "subtitle": None,
-            "app_path": request.get_full_path(),
-            "username": request.user.get_username(),
-        }
-        if (
-            REDIRECT_FIELD_NAME not in request.GET
-            and REDIRECT_FIELD_NAME not in request.POST
-        ):
-            context[REDIRECT_FIELD_NAME] = reverse("admin:index", current_app=self.name)
-        context.update(extra_context or {})
-
-        defaults = {
-            "extra_context": context,
-            "authentication_form": self.login_form or AdminAuthenticationForm,
-            "template_name": self.login_template or "admin/login.html",
-        }
-        request.current_app = self.name
-        return LoginView.as_view(**defaults)(request)
-```
-</pre>
+   ```py
+   # sites.py
+   # add this to where all modules are imported really !important
+   from django.contrib.auth import get_user_model, logout
+   
+   # then at login function
+       @method_decorator(never_cache)
+       def login(self, request, extra_context=None):
+           """
+           Display the login form for the given HttpRequest.
+           """
+           if request.method == "GET" and self.has_permission(request):
+               # Already logged-in, redirect to admin index
+               index_path = reverse("admin:index", current_app=self.name)
+               return HttpResponseRedirect(index_path)
+            
+           """
+           Very Important! check if the user trying to login is not of the settings.AUTH_USER_MODEL
+           """
+           SETTINGS_USER = get_user_model()
+           if request.user.is_authenticated and not isinstance(request.user, SETTINGS_USER):
+               logout(request)**
+   
+           # Since this module gets imported in the application's root package,
+           # it cannot import models from other applications at the module level,
+           # and django.contrib.admin.forms eventually imports User.
+           from django.contrib.admin.forms import AdminAuthenticationForm
+           from django.contrib.auth.views import LoginView
+   
+           context = {
+               **self.each_context(request),
+               "title": _("Log in"),
+               "subtitle": None,
+               "app_path": request.get_full_path(),
+               "username": request.user.get_username(),
+           }
+           if (
+               REDIRECT_FIELD_NAME not in request.GET
+               and REDIRECT_FIELD_NAME not in request.POST
+           ):
+               context[REDIRECT_FIELD_NAME] = reverse("admin:index", current_app=self.name)
+           context.update(extra_context or {})
+   
+           defaults = {
+               "extra_context": context,
+               "authentication_form": self.login_form or AdminAuthenticationForm,
+               "template_name": self.login_template or "admin/login.html",
+           }
+           request.current_app = self.name
+           return LoginView.as_view(**defaults)(request)
+   ```
 
 ### Celery Configuration
 
 In Life_Prescriber/celery.py:
-<pre>
    ```python
    app.conf.beat_schedule = {
        'task-name': {
@@ -202,7 +187,6 @@ In Life_Prescriber/celery.py:
    # very important do not change
    app.conf.task_default_queue = 'default'
    ```
-</pre>
 
 ## License
 
