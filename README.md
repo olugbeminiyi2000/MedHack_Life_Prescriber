@@ -76,48 +76,50 @@ Test Clinician Login Credentials:
 ### Setup
 
 1. *Create and activate a virtual environment:*
-   bash
-   ```
-   python -m venv your_virtual_environment_name
-   source venv/bin/activate   # On Windows use `your_virtual_environment_name\Scripts\activate`
-   ```
+   <pre>
+      ```bash
+      python -m venv your_virtual_environment_name
+      source venv/bin/activate   # On Windows use `your_virtual_environment_name\Scripts\activate`
+      ```
+   </pre>
 
-2. *Clone the repository:*
-   bash
-   ```
-   git clone https://github.com/olugbeminiyi2000/MedHack_Life_Prescriber.git
-   cd MedHack_Life_Prescriber/
-   ```
+3. *Clone the repository:*
+   <pre>
+      ```bash
+      git clone https://github.com/olugbeminiyi2000/MedHack_Life_Prescriber.git
+      cd MedHack_Life_Prescriber/
+      ```
+   </pre>
 
-3. *Install dependencies:*
-   bash
-   ```
-   pip install -r requirements.txt
-   ```
-   
+5. *Install dependencies:*
+   <pre>
+      ```bash
+      pip install -r requirements.txt
+      ```
+   </pre>   
 
-4. *Set up the Django project:*
-   bash
-   ```
-   cd Life_Prescriber
-   code/vi settings.py # adjust settings.py making DEBUG=True, EMAIL_HOST_USER to your test email adress, and finally set EMAIL_HOST_PASSWORD using google SMTP Authentication.
-   python manage.py makemigrations
-   python manage.py migrate
-   python manage.py createsuperuser --email=your_email --username=your_username
-   python manage.py check
-   python manage.py runserver
-   ```
+7. *Set up the Django project:*
+   <pre>
+      ```bash
+      cd Life_Prescriber
+      code/vi settings.py # adjust settings.py making DEBUG=True, EMAIL_HOST_USER to your test email adress, and finally set EMAIL_HOST_PASSWORD using google SMTP Authentication.
+      python manage.py makemigrations
+      python manage.py migrate
+      python manage.py createsuperuser --email=your_email --username=your_username
+      python manage.py check
+      python manage.py runserver
+      ```
+   </pre>
 
-   
-
-5. *Set up Celery:*
+9. *Set up Celery:*
    - open up 2 command line interface at vscode terminal Launch Profile.
    - then change directory to MedHack_Life_Prescriber/Life_Prescriber/ if not there.
-   bash
-   ```
-   celery -A Life_Prescriber worker --pool=solo -l INFO
-   celery -A Life_Prescriber beat -l INFO
-   ```
+   <pre>
+      ```bash
+      celery -A Life_Prescriber worker --pool=solo -l INFO
+      celery -A Life_Prescriber beat -l INFO
+      ```
+   </pre>
 
 ## Usage
 
@@ -127,12 +129,13 @@ Test Clinician Login Credentials:
 
 ## Configuration
 ## django admin/sites.py configuration !important
-bash
-```
-code\vi your_python_virtual_env/Lib/sites-packages/django/contrib/admin/sites.py
-```
-python
-```
+<pre>
+   ```bash
+   code\vi your_python_virtual_env/Lib/sites-packages/django/contrib/admin/sites.py
+   ```
+</pre>
+<pre>
+```python
 # sites.py
 # add this to where all modules are imported really !important
 from django.contrib.auth import get_user_model, logout
@@ -147,10 +150,11 @@ from django.contrib.auth import get_user_model, logout
             # Already logged-in, redirect to admin index
             index_path = reverse("admin:index", current_app=self.name)
             return HttpResponseRedirect(index_path)
-**         """
+         
+        """
         Very Important! check if the user trying to login is not of the settings.AUTH_USER_MODEL
         """
-       SETTINGS_USER = get_user_model()
+        SETTINGS_USER = get_user_model()
         if request.user.is_authenticated and not isinstance(request.user, SETTINGS_USER):
             logout(request)**
 
@@ -182,20 +186,23 @@ from django.contrib.auth import get_user_model, logout
         request.current_app = self.name
         return LoginView.as_view(**defaults)(request)
 ```
+</pre>
+
 ### Celery Configuration
 
 In Life_Prescriber/celery.py:
-python
-```
-app.conf.beat_schedule = {
-    'task-name': {
-        'task': 'prescription_ongo.tasks.send_async_email',
-        'schedule': crontab(minute='*/10'),
-    },
-}
-# very important do not change
-app.conf.task_default_queue = 'default'
-```
+<pre>
+   ```python
+   app.conf.beat_schedule = {
+       'task-name': {
+           'task': 'prescription_ongo.tasks.send_async_email',
+           'schedule': crontab(minute='*/10'),
+       },
+   }
+   # very important do not change
+   app.conf.task_default_queue = 'default'
+   ```
+</pre>
 
 ## License
 
