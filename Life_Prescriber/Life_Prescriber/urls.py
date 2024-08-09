@@ -19,8 +19,13 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
 
+# Customize the admin site titles
+admin.site.site_title = "Life Prescriber"
+admin.site.site_header = "Life Prescriber Admin"
+admin.site.index_title = "Welcome to Life Prescriber Admin"
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('life_prescriber_admin/', admin.site.urls),
     path('prescription_ongo/', include('prescription_ongo.urls', namespace="prescription")),
 ]
 

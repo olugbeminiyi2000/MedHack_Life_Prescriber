@@ -13,6 +13,55 @@ Life Prescriber is a web application designed to help medical patients adhere to
 - *Admin Interface*: Enhanced admin interface for managing users and prescriptions.
 - *Task Scheduling*: Utilizes Celery for scheduling email reminders.
 
+# Navigation
+
+- Accessing Life Prescriber:
+   From your web browser, navigate to the [General Homepage Login](https://turingmachines.pythonanywhere.com/prescription_ongo/general_home/)
+   ![General Homepage Login](images/image.png)
+
+- Verify Login Information:
+   Enter login credentials provided by system admin at onboarding and click "verify details"
+   ![Credential Verification](images/image-1.png)
+
+   On successful verification, you can now navigate to either the "Hospital Portal" or "Phamarcy Portal" depending on your role on the system. 
+   ![Portal Selection](images/image-2.png)
+
+- Hospital Portal:
+   In the hospital portal, you can onboard new patient(s) to the platform by clicking "Register" and filling in required information or use "Search" to query the platform using a patient's 'Insurance Provider Name' and 'Insurance ID Number'.
+   ![Hospital Portal](images/image-3.png)
+
+   Enter required information
+   ![Enter Details](images/image-5.png)
+
+   Displays Response Message
+   ![Response](images/image-6.png)
+
+- Pharmacy Portal:
+   In the pharmacy portal, new pharmacy staff(s) can onboarded or deleted.
+   ![Add Staff](images/image-7.png)
+   ![Delete Staff](images/image-8.png)
+
+- Login into Life Prescriber Clinician Dashboard:
+   To access patient's medical information securely stored on the database for creating, modifying and/or tracking prescriptions, clinicians can navigate to the login interface by clicking "Go to Login" from "[General Homepage Login](https://turingmachines.pythonanywhere.com/prescription_ongo/general_home/)" and providing their credentials.
+   ![Dashboard Login](images/image-9.png)
+
+   Clinician(s) enters patient's credentials (Insurance Name and Insurance ID No.) to search for patient's prescritption information in the database.
+   ![Search Patient](images/image-10.png)
+
+   Search returns patient's information if found.
+   ![Patient Card](images/image-11.png)
+
+   Clinician(s) can click on "View Prescription" to see patient's prescription details. This displays every prescription the patient has received since onboarding into Life Prescriber. This page shows detailed information on each prescription (Drug name, Datetime of prescription, Time of first dose, Notification time, End date, Total no. tablets, Amount of tablets per dose, Remaining tablets, Dosage per day)
+   ![Prescription Details](images/image-12.png)
+
+   Clinician(s) can add new prescription by clicking the "Add New".
+   ![Add New](images/image-13.png)
+
+   Clinician(s) can also click the edit button to make changes to prescriptions where necessary.
+   ![Change Prescription](images/image-14.png)
+
+
+
 ## Installation
 
 ### Prerequisites
