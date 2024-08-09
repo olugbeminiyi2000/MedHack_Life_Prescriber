@@ -15,6 +15,10 @@ Life Prescriber is a web application designed to help medical patients adhere to
 
 # Navigation
 
+Test Clinician Login Credentials:
+      Username: faisal
+      Password: sitdownhere
+
 - Accessing Life Prescriber:
    From your web browser, navigate to the [General Homepage Login](https://turingmachines.pythonanywhere.com/prescription_ongo/general_home/)
    ![General Homepage Login](images/image.png)
