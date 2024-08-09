@@ -19,6 +19,11 @@
                 <div class="logo-image">
                     <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
                     <p>Life Prescriber™</p>
+                    {% if first_get_request %}
+                    <div class="logo-notification">
+                        Search or Register Patient
+                    </div>
+                    {% endif %}
                 </div>
                 <div class="switch-buttons">
                     <div class="slider {% if search_user %}move-slider{% else %}move-slider1{% endif %}"
@@ -26,9 +31,9 @@
 
                     </div>
                     <button class="switch-buttons__item" id="sign-in-switch" type="button"
-                        data-url="{% url 'prescription:secret_search' %}">Search</button>
+                        data-url="{% url 'prescription:secret_search' secret_search %}">Search</button>
                     <button class="switch-buttons__item" id="register-switch" type="button"
-                        data-url="{% url 'prescription:secret_signup' %}">Register</button>
+                        data-url="{% url 'prescription:secret_signup' secret_signup %}">Register</button>
                 </div>
             </div>
 
@@ -56,6 +61,14 @@
                         display form</p>
                 </div>
                 {% endif %}
+                {% if success_msg or error_msg %}
+                    <div class="btn">
+                        <button type="button" class="home-btn">
+                            <a href="{% url 'prescription:general_home' %}" style="text-decoration: none;"><i
+                                    class="fa-solid fa-circle-chevron-left"></i> Back</a>
+                        </button>
+                    </div>
+                {% endif %}
                 {% if not msg %}
                 <form action="" method="post">
                     {% csrf_token %}
@@ -73,7 +86,8 @@
                     </div>
                     <div class="btn">
                         <div>
-                            <button type="submit" class="submit-btn">Search<i class="fa-solid fa-magnifying-glass"></i></button>
+                            <button type="submit" class="submit-btn">Search<i
+                                    class="fa-solid fa-magnifying-glass"></i></button>
                         </div>
                     </div>
                     <!-- <button type="submit">
@@ -104,6 +118,14 @@
                     <p class="success-search-msg">Click the <span class="inner-success-text">"Register"</span> button to
                         display form</p>
                 </div>
+                {% endif %}
+                {% if sign_success_msg or sign_error_msg %}
+                    <div class="btn">
+                        <button type="button" class="home-btn">
+                            <a href="{% url 'prescription:general_home' %}" style="text-decoration: none;"><i
+                                    class="fa-solid fa-circle-chevron-left"></i> Back</a>
+                        </button>
+                    </div>
                 {% endif %}
                 {% if not sign_msg %}
                 <form action="" method="post">

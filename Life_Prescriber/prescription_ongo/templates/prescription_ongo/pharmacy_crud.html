@@ -13,22 +13,34 @@
 </head>
 
 <body>
+    <div class="top-btn">
+        <button type="button" class="home-btn">
+            <a href="{% url 'prescription:general_home' %}" style="text-decoration: none;"><i
+                    class="fa-solid fa-circle-chevron-left"></i></a>
+        </button>
+    </div>
     <main>
         <div class="main-form">
             <div class="main-form-btn">
                 <div class="logo-image">
                     <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
                     <p>Life Prescriber™</p>
+                    {% if first_get_request %}
+                    <div class="logo-notification">
+                        Add or Remove Pharmacist
+                    </div>
+                    {% endif %}
                 </div>
+
                 <div class="switch-buttons">
                     <div class="slider {% if add_user %}move-slider{% else %}move-slider1{% endif %}"
                         id="slider-button">
 
                     </div>
                     <button class="switch-buttons__item" id="sign-in-switch" type="button"
-                        data-url="{% url 'prescription:secret_add_user' %}">Add Staff</button>
+                        data-url="{% url 'prescription:secret_add_user' secret_add_user %}">Add Staff</button>
                     <button class="switch-buttons__item" id="register-switch" type="button"
-                        data-url="{% url 'prescription:secret_delete_user' %}">Delete Staff</button>
+                        data-url="{% url 'prescription:secret_delete_user' secret_delete_user %}">Delete Staff</button>
                 </div>
             </div>
 
@@ -52,7 +64,6 @@
                         <p>{{delete_user_success_msg}}</p>
                     </div>
                 </div>
-
                 {% endif %}
                 <form action="" method="post">
                     {% csrf_token %}
@@ -69,14 +80,14 @@
                             {{signup_form.username.label_tag}}
                             {{signup_form.username}}
                             {% if signup_form.errors %}
-                            <p>{{signup_form.errors.username}}</p>
+                            <p class="form-err-msg">{{signup_form.errors.username}}</p>
                             {% endif %}
                         </div>
                         <div class="form-group">
                             {{signup_form.email.label_tag}}
                             {{signup_form.email}}
                             {% if signup_form.errors %}
-                            <p>{{signup_form.errors.email}}</p>
+                            <p class="form-err-msg">{{signup_form.errors.email}}</p>
                             {% endif %}
                         </div>
                         <div class="form-group">
@@ -95,7 +106,7 @@
                             {{signup_form.password2.label_tag}}
                             {{signup_form.password2}}
                             {% if signup_form.errors %}
-                            <p>{{signup_form.errors.password2}}</p>
+                            <p class="form-err-msg">{{signup_form.errors.password2}}</p>
                             {% endif %}
                         </div>
                     </div>
@@ -127,7 +138,7 @@
                             <input type="text" name="username" id="username" value={{staff}}>
                         </div>
                     </div>
-                    
+
                     <div class="btn">
                         <button type="submit" class="submit-btn remove-btn">
                             Remove<i class="fa-solid fa-user-xmark"></i>

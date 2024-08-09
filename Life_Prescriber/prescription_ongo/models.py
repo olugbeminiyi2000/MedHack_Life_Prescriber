@@ -5,6 +5,7 @@ import phonenumbers
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from datetime import time
+import uuid
 
 # Validators for my phone number field
 def validate_and_normalize_phone_number(value):
@@ -101,3 +102,8 @@ class Insurance(models.Model):
         ("Sanlam Vie", "Sanlam Vie"),
     ]
     insurance_name = models.CharField(max_length=700, choices=INSURANCE_CHOICES, unique=True)
+
+class OneTimeLink(models.Model):
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

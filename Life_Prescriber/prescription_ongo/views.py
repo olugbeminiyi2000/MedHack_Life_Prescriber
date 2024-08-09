@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate
+from django.contrib import messages
 from django.urls import reverse
-from .models import ClinicUser
+from .models import ClinicUser, OneTimeLink
 from django.views import View
 from .models import Patient, Prescribe
 from .forms import PatientForm, PrescribeForm, SecretInsuranceRegisterForm, SecretPatientRegisterForm
 from datetime import time, datetime, timedelta
 from django.core.signing import BadSignature, SignatureExpired
 from .utils import SIGNER
+from .utils_2 import generate_secret_url, SIGNER_2
 import math
+from django.template.loader import render_to_string
 
 # define utiity function
 def send_back_error_with_previous_data(request, error_message):
@@ -224,9 +228,14 @@ class PrescribeView(View):
 
 class DrugUsedView(View):
     template_name = "prescription_ongo/"
-    def get(self, request, token):
+    def get(self, request, timer_token, clicked_token):
         try:
-            signed_value = SIGNER.unsign(token, max_age=timedelta(minutes=30))
+            signed_value = SIGNER.unsign(timer_token, max_age=timedelta(minutes=30))
+            # check if the link has been clicked, if clicked already return an error template
+            one_time_link = OneTimeLink.objects.get(token=clicked_token)
+            if one_time_link.used:
+                return render(request, self.template_name + 'prescribe_link_used.html')
+            
             username, id = signed_value.split(":")
             # TODO decrease the ttd by the number of tablets per take
             # by using the username to get patient and with id to get drug
@@ -242,12 +251,20 @@ class DrugUsedView(View):
             if not get_patient or not get_drug:
                 return render(request, self.template_name + 'prescribe_error.html')
             
+            
             get_total_tablets_dynamic = get_drug.total_tablets_dynamic
             get_no_of_tablets_per_use = get_drug.no_of_tablets_per_use
             new_total_tablets_dynamic = get_total_tablets_dynamic - get_no_of_tablets_per_use
 
             get_drug.total_tablets_dynamic = new_total_tablets_dynamic
             get_drug.save()
+
+            # now after drug has been saved make the link to be used already
+            # Mark the link as used
+            one_time_link.used = True
+            one_time_link.save()
+
+            # now render a success template
             return render(request, self.template_name + 'drug_used.html')
         except (BadSignature, SignatureExpired):
             return render(request, self.template_name + 'link_expired.html')
@@ -411,52 +428,73 @@ class ChangePrescribeView(View):
     
 class HospitalSecretSearch(View):
     template_name = "prescription_ongo/registerusers.html"
-    def get(self, request):
+    template_name_short = "prescription_ongo/"
+    def get(self, request, timer_token):
+        try:
+            # check if the timer token has expired and do nothing with the details inside
+            signed_value = SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+            # now create a timer token for the hospital signup and search
+            clinic_timer_token_1 = generate_secret_url("secret_search")
+            clinic_timer_token_2 = generate_secret_url("secret_signup")
+
+            context_dict = {}
+            context_dict["search_user"] = "search_user"
+            context_dict["first_get_request"] = "first_get_request"
+            context_dict["secret_search"] = clinic_timer_token_1
+            context_dict["secret_signup"] = clinic_timer_token_2
+            context_dict["signed_value"] = signed_value
+
+
+        
+            # check if there are query parameters in the url, so we can handle the search also in get request
+            if request.GET.get("insurance_name", None) and request.GET.get("insurance_number", None):
+                get_insurance_name = request.GET.get("insurance_name", None)
+                get_insurance_number = request.GET.get("insurance_number", None)
+
+                # remove all spaces in insurance name and insurance number
+                clean_insurance_name = ""
+                clean_insurance_number = ""
+
+                for i in get_insurance_name:
+                    if i == "\n" or i == "\t" or i == " ":
+                        continue
+                    clean_insurance_name += i
+                
+                for j in get_insurance_number:
+                    if j == "\n" or j == "\t" or j == " ":
+                        continue
+                    clean_insurance_number += j
+                
+                # check if that insurance id exist
+                insurance_id = clean_insurance_name.lower() + "-" + clean_insurance_number.lower()
+
+                check_if_user_exist = Patient.objects.filter(
+                    insurance_id=insurance_id,
+                )
+
+                context_dict["msg"] = "msg"
+
+                if check_if_user_exist.exists():
+                    context_dict["success_msg"] = f'Insurance number "{clean_insurance_number}" exists'
+                else:
+                    context_dict["error_msg"] = f"User doesn't exist. Create a new user or Retry"
+            
+            insurance_form = SecretInsuranceRegisterForm()
+            context_dict["insurance_form"] = insurance_form
+
+            return render(request, self.template_name, context_dict)
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_name_short + 'general_link_expired.html')
+
+
+    def post(self, request, timer_token):
+        # now create a timer token for the hospital signup and search
+        clinic_timer_token_1 = generate_secret_url("secret_search")
+        clinic_timer_token_2 = generate_secret_url("secret_signup")
         context_dict = {}
         context_dict["search_user"] = "search_user"
-        
-        # check if there are query parameters in the url, so we can handle the search also in get request
-        if request.GET.get("insurance_name", None) and request.GET.get("insurance_number", None):
-            get_insurance_name = request.GET.get("insurance_name", None)
-            get_insurance_number = request.GET.get("insurance_number", None)
-
-            # remove all spaces in insurance name and insurance number
-            clean_insurance_name = ""
-            clean_insurance_number = ""
-
-            for i in get_insurance_name:
-                if i == "\n" or i == "\t" or i == " ":
-                    continue
-                clean_insurance_name += i
-            
-            for j in get_insurance_number:
-                if j == "\n" or j == "\t" or j == " ":
-                    continue
-                clean_insurance_number += j
-            
-            # check if that insurance id exist
-            insurance_id = clean_insurance_name.lower() + "-" + clean_insurance_number.lower()
-            print(insurance_id)
-
-            check_if_user_exist = Patient.objects.filter(
-                insurance_id=insurance_id,
-            )
-
-            context_dict["msg"] = "msg"
-
-            if check_if_user_exist.exists():
-                context_dict["success_msg"] = f'Insurance number "{clean_insurance_number}" exists'
-            else:
-               context_dict["error_msg"] = f"User doesn't exist. Create a new user or Retry"
-        
-        insurance_form = SecretInsuranceRegisterForm()
-        context_dict["insurance_form"] = insurance_form
-
-        return render(request, self.template_name, context_dict)
-
-    def post(self, request):
-        context_dict = {}
-        context_dict["search_user"] = "search_user"
+        context_dict["secret_search"] = clinic_timer_token_1
+        context_dict["secret_signup"] = clinic_timer_token_2
         
         # handling form submission instead of query parameter
         if request.POST.get("insurance_name", None) and request.POST.get("insurance_number", None):
@@ -497,28 +535,49 @@ class HospitalSecretSearch(View):
 
 class HospitalSecretSignUp(View):
     template_name = "prescription_ongo/registerusers.html"
-    def get(self, request):
-        context_dict = {}
-        context_dict["register_user"] = "register_user"
-        
-        # create user form and inurance form
-        user_form = SecretPatientRegisterForm()
-        insurance_form = SecretInsuranceRegisterForm()
+    template_name_short = "prescription_ongo/"
 
-        context_dict["user_form"] = user_form
-        context_dict["insurance_form"] = insurance_form
+    def get(self, request, timer_token):
+        try:
+            # check if the timer token has expired and do nothing with the details inside
+            signed_value = SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+            # now create a timer token for the hospital signup and search
+            clinic_timer_token_1 = generate_secret_url("secret_search")
+            clinic_timer_token_2 = generate_secret_url("secret_signup")       
 
-        if request.session.get("sign_success_msg", None):
-            context_dict["sign_msg"] = "sign_msg"
-            context_dict["sign_success_msg"] = request.session.get("sign_success_msg")
-            del request.session["sign_success_msg"]
+            context_dict = {}  
+            context_dict["register_user"] = "register_user"
+            context_dict["first_get_request"] = "first_get_request"
+            context_dict["secret_search"] = clinic_timer_token_1
+            context_dict["secret_signup"] = clinic_timer_token_2
+            context_dict["signed_value"] = signed_value
+
+            
+            # create user form and inurance form
+            user_form = SecretPatientRegisterForm()
+            insurance_form = SecretInsuranceRegisterForm()
+
+            context_dict["user_form"] = user_form
+            context_dict["insurance_form"] = insurance_form
+
+            if request.session.get("sign_success_msg", None):
+                context_dict["sign_msg"] = "sign_msg"
+                context_dict["sign_success_msg"] = request.session.get("sign_success_msg")
+                del request.session["sign_success_msg"]
 
 
-        return render(request, self.template_name, context_dict)
+            return render(request, self.template_name, context_dict)
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
-    def post(self, request):
+    def post(self, request, timer_token):
+        # now create a timer token for the hospital signup and search
+        clinic_timer_token_1 = generate_secret_url("secret_search")
+        clinic_timer_token_2 = generate_secret_url("secret_signup")
         context_dict = {}
         context_dict["register_user"] = "register_user"
+        context_dict["secret_search"] = clinic_timer_token_1
+        context_dict["secret_signup"] = clinic_timer_token_2
 
         # get this specific data to check for errors i.e username and insurance id
         get_username = request.POST.get("username")
@@ -592,7 +651,7 @@ class HospitalSecretSignUp(View):
              )
 
              request.session["sign_success_msg"] = f"New user created"
-             return redirect(request.path)
+             return redirect(reverse("prescription:secret_signup", args=[clinic_timer_token_2]))
 
 
 class NewPrescribeView(View):
@@ -768,3 +827,56 @@ class NewPrescribeView(View):
         return redirect(request.path)
 
 
+class GeneralHomeView(View):
+    template_name = "prescription_ongo/general_home.html"
+
+    def get(self, request):
+        context = {}
+        if request.session.get("clinicial_found_msg", None):
+            clinic_timer_token = generate_secret_url("secret_search")
+            pharmacy_timer_token = generate_secret_url("secret_add_user")
+
+            context["success_message"] = request.session["clinicial_found_msg"]
+            context["clinic_timer_token"] = clinic_timer_token
+            context["pharmacy_timer_token"] = pharmacy_timer_token
+            
+            del request.session["clinicial_found_msg"]
+        elif request.session.get("error_message", None):
+            context["error_message"] = request.session["error_message"]
+            del request.session["error_message"]
+
+        else:
+            context["first_get_request"] = "first_get_request"
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        # get the username_email and password first
+        username_or_email = request.POST.get("username_or_email")
+        password = request.POST.get("password")
+
+        print(username_or_email, password)
+
+        # now we have to authenticate using our already defined CustomBackend class
+        authenticate_user = authenticate(
+                request,
+                username_or_email=username_or_email,
+                password=password,
+        )
+        print(authenticate_user)
+        if authenticate_user is not None:
+            # check to see that custom user is not active
+            # then make the user active
+            if authenticate_user.is_active:
+                # display a flash message for successful clinicial found
+                messages.success(request, "Clinician Verified ✔")
+                request.session["clinicial_found_msg"] = "clinicial found"
+                return redirect(request.path)
+            else:
+                # redirect to the user has been blocked
+                return redirect(reverse("prescription:custom_ban"))
+        else:
+            request.session["error_message"] = "Username, Email, or Password is wrong and all are case sensitive "
+            messages.error(request, "Clinician not found ✖")
+            return redirect(request.path)
+        

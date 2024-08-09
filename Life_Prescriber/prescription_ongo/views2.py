@@ -1,8 +1,8 @@
-
+import os
+from dotenv import load_dotenv
+from django.conf import settings
 from django.shortcuts import render, redirect
 from django.views import View
-# from django.http import HttpResponse
-# from django.utils.http import urlencode
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -17,7 +17,12 @@ from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
+from .utils_2 import generate_secret_url, SIGNER_2
+from datetime import timedelta
+from django.core.signing import BadSignature, SignatureExpired
 # Create your views here.
+
+load_dotenv()
 
 def custom_send_password_reset_link(custom_user):
     # Generate a password reset token
@@ -28,7 +33,12 @@ def custom_send_password_reset_link(custom_user):
     token = token_generator.make_token(custom_user)
 
     # Construct the password reset URL
-    reset_url = f'https://turingmachines.pythonanywhere.com/prescription_ongo/custom_reset/{uidb64}/{token}/'
+    if settings.DEBUG:
+        SITE_URL = os.getenv("LOCAL_HOST")
+    else:
+        SITE_URL = os.getenv("WEB_HOST")
+
+    reset_url = f'{SITE_URL}/prescription_ongo/custom_reset/{uidb64}/{token}/'
 
     # # Construct the email subject and body
     subject = "Life Prescriber Clinic User Password Reset"
@@ -297,23 +307,42 @@ class CustomPasswordReset(View):
 
 class SecretClinicUserAdd(View):
     template_name = "prescription_ongo/pharmacy_crud.html"
-    def get(self, request):
-        context_dict = {}
-        context_dict["add_user"] = "add_user"
+    template_name_short = "prescription_ongo/"
+    def get(self, request, timer_token):
+        try:
+            # check if the timer token has expired and do nothing with the details inside
+            signed_value = SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+            # now create a timer token for the pharmacy add user and delete user
+            pharmacy_timer_token_1 = generate_secret_url("secret_add_user")
+            pharmacy_timer_token_2 = generate_secret_url("secret_delete_user")
 
-        # get pharmacist signup form
-        signup_form = ClinicUserCreationForm()
-        context_dict["signup_form"] = signup_form
+            context_dict = {}
+            context_dict["add_user"] = "add_user"
+            context_dict["first_get_request"] = "first_get_request"
+            context_dict["secret_add_user"] = pharmacy_timer_token_1
+            context_dict["secret_delete_user"] = pharmacy_timer_token_2
+            context_dict["signed_value"] = signed_value
 
-        if request.session.get("delete_user_success_msg", None):
-            context_dict["delete_user_success_msg"] = request.session["delete_user_success_msg"]
-            del request.session["delete_user_success_msg"]
+            # get pharmacist signup form
+            signup_form = ClinicUserCreationForm()
+            context_dict["signup_form"] = signup_form
 
-        return render(request, self.template_name, context_dict)
+            if request.session.get("delete_user_success_msg", None):
+                context_dict["delete_user_success_msg"] = request.session["delete_user_success_msg"]
+                del request.session["delete_user_success_msg"]
+
+            return render(request, self.template_name, context_dict)
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
-    def post(self, request):
+    def post(self, request, timer_token):
+        # now create a timer token for the pharmacy add user and delete user
+        pharmacy_timer_token_1 = generate_secret_url("secret_add_user")
+        pharmacy_timer_token_2 = generate_secret_url("secret_delete_user")
         context_dict = {}
         context_dict["add_user"] = "add_user"
+        context_dict["secret_add_user"] = pharmacy_timer_token_1
+        context_dict["secret_delete_user"] = pharmacy_timer_token_2
         # get the request.POST data inorder to validate it
         signup_form = ClinicUserCreationForm(request.POST)
         # validate form
@@ -351,15 +380,35 @@ class SecretClinicUserAdd(View):
 
 class SecretClinicUserDelete(View):
     template_name = "prescription_ongo/pharmacy_crud.html"
-    def get(self, request):
-        context_dict = {}
-        context_dict["delete_user"] = "delete_user"
+    template_name_short = "prescription_ongo/"
+    def get(self, request, timer_token):
+        try:
+            # check if the timer token has expired and do nothing with the details inside
+            signed_value = SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+            # now create a timer token for the pharmacy add user and delete user
+            pharmacy_timer_token_1 = generate_secret_url("secret_add_user")
+            pharmacy_timer_token_2 = generate_secret_url("secret_delete_user")
 
-        return render(request, self.template_name, context_dict)
+            context_dict = {}
+            context_dict["delete_user"] = "delete_user"
+            context_dict["first_get_request"] = "first_get_request"
+            context_dict["secret_add_user"] = pharmacy_timer_token_1
+            context_dict["secret_delete_user"] = pharmacy_timer_token_2
+            context_dict["signed_value"] = signed_value
+
+            return render(request, self.template_name, context_dict)
+
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_name_short + 'general_link_expired.html')
     
-    def post(self, request):
+    def post(self, request, timer_token):
+        # now create a timer token for the pharmacy add user and delete user
+        pharmacy_timer_token_1 = generate_secret_url("secret_add_user")
+        pharmacy_timer_token_2 = generate_secret_url("secret_delete_user")
         context_dict = {}
         context_dict["delete_user"] = "delete_user" 
+        context_dict["secret_add_user"] = pharmacy_timer_token_1
+        context_dict["secret_delete_user"] = pharmacy_timer_token_2
 
         # check the username and see if it exists in the database if it doesn't not send an error
         get_username = request.POST.get("username")
@@ -381,7 +430,7 @@ class SecretClinicUserDelete(View):
         ).delete()
 
         # now return a redirect to clinicuseradd
-        return redirect(reverse("prescription:secret_add_user"))
+        return redirect(reverse("prescription:secret_add_user", args=[pharmacy_timer_token_2]))
         
 
 class PharmacySecretSearch(View):

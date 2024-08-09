@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=div, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static './styles/general_home.css' %}" type="text/css">
+    <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
+    <title>Clinicians Login</title>
+</head>
+
+<body>
+    <div class="form-container">
+        <div class="main-form">
+            <div class="logo-image">
+                <img src="{% static './images/logo_placeholder.png' %}" alt="life_prescriber">
+                <p>Life Prescriber™</p>
+            </div>
+            <div class="form-header" id="typing-effect">
+            </div>
+            <div class="forms-div">
+                <div class="notification">
+                    <div class="notification-msg">
+                        {% include 'prescription_ongo/messages.html' %}
+                    </div>
+                </div>
+                {% if error_message %}
+                <div class="last-error-msg">
+                    <p class="alert err-msg">{{error_message}}</p>
+                </div>
+                {% endif %}
+                <form method="post" action="{% url 'prescription:general_home' %}">
+                    {% csrf_token %}
+                    <div>
+                        <div class="form-group">
+                            <label for="clinic_username_or_email">
+                                Username or Email
+                            </label>
+                            <input type="text" name="username_or_email" id="clinic_username_or_email">
+                        </div>
+                        <div class="form-group">
+                            <label for="clinic_password">
+                                Password
+                            </label>
+                            <input type="password" name="password" id="clinic_password">
+                        </div>
+                        <div class="back-link-btn">
+                            <p>
+                                <a href="{% url 'prescription:custom_home' %}">Go to Login</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="btn">
+                        <button type="submit" class="submit-btn">
+                            Verify details
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if success_message %}
+        <div id="fixed-notification-box" class="hidden">
+            <div class="fixed-notification-close"><i class="fa-solid fa-circle-xmark"></i></div>
+
+            <div class="fixed-notification-content">
+                <div class="notification-below">
+                    <div class="notification-msg-below">
+                        {% include 'prescription_ongo/messages.html' %}
+                    </div>
+                    <div class="notification-msg-para">
+                        <p>Proceed to Hospital Portal or Pharmacy Portal below to view patients details or add users</p>
+                    </div>
+                </div>
+                <div class="fixed-notification-tabs">
+                    <div class="tab-box">
+                        <a href="{% url 'prescription:secret_search' clinic_timer_token %}">
+                            Hospital Portal
+                        </a>
+                    </div>
+                    <div class="tab-box">
+                        <a href="{% url 'prescription:secret_add_user' pharmacy_timer_token %}">
+                            Pharmacy Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+{% if first_get_request %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const textElement = document.getElementById('typing-effect');
+        const text = 'Are you a Pharmacy or Hospital?';
+        const typingSpeed = 100; // Milliseconds per character
+        const isFirstLoad = true;
+
+        if (isFirstLoad) {
+            let charIndex = 0;
+
+            function type() {
+                if (charIndex < text.length) {
+                    textElement.textContent += text.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    localStorage.setItem('isFirstLoad', 'false');
+                }
+            }
+
+            type();
+        } else {
+            textElement.textContent = text;
+        }
+    });
+</script>
+{% else %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const textElement = document.getElementById('typing-effect');
+        const text = 'Are you a Pharmacy or Hospital?';
+        const typingSpeed = 100; // Milliseconds per character
+        const isFirstLoad = false;
+
+        if (isFirstLoad) {
+            let charIndex = 0;
+
+            function type() {
+                if (charIndex < text.length) {
+                    textElement.textContent += text.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    localStorage.setItem('isFirstLoad', 'false');
+                }
+            }
+
+            type();
+        } else {
+            textElement.textContent = text;
+        }
+    });
+</script>
+{% endif %}
+{% if success_message %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const notificationBox = document.getElementById('fixed-notification-box');
+        const notificationClose = notificationBox.querySelector(".fixed-notification-close");
+        const iconTag = notificationClose.querySelector('i');
+        const mainForm = document.querySelector('.main-form');
+
+        iconTag.addEventListener("click", (e) => {
+            notificationBox.classList.add('hidden');
+            notificationBox.classList.remove('visible');
+            mainForm.classList.remove('blur');
+        })
+        notificationBox.classList.add('visible');
+        notificationBox.classList.remove('hidden');
+        mainForm.classList.add('blur');
+    });
+
+</script>
+{% endif %}
+
+</html>
