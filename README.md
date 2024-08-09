@@ -1,4 +1,4 @@
-README.md:
+![Python](https://img.shields.io/badge/Python-43.1%25-brightgreen.svg) ![Django](https://img.shields.io/badge/Django-43.1%25-brightgreen.svg) ![JavaScript](https://img.shields.io/badge/JavaScript-0.8%25-lightgrey.svg) ![Celery](https://img.shields.io/badge/Celery-43.1%25-brightgreen.svg) ![pip](https://img.shields.io/badge/pip-43.1%25-brightgreen.svg) ![contributors](https://img.shields.io/badge/contributors-3-orange.svg) ![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
 # Life Prescriber
 
