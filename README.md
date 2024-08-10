@@ -95,7 +95,7 @@ Test Clinician Login Credentials:
 7. *Set up the Django project:*
       ```sh
       cd Life_Prescriber
-      code/vi settings.py # adjust settings.py making DEBUG=True, EMAIL_HOST_USER to your test email adress, and finally set EMAIL_HOST_PASSWORD using google SMTP Authentication.
+      code/vi Life_Prescriber/settings.py # adjust settings.py making DEBUG=True, TIME_ZONE = "Continent/City", EMAIL_HOST_USER to your test email adress, and finally set EMAIL_HOST_PASSWORD using google SMTP Authentication.
       python manage.py makemigrations
       python manage.py migrate
       python manage.py createsuperuser --email=your_email --username=your_username
