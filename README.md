@@ -143,7 +143,7 @@ Test Clinician Login Credentials:
            """
            SETTINGS_USER = get_user_model()
            if request.user.is_authenticated and not isinstance(request.user, SETTINGS_USER):
-               logout(request)**
+               logout(request)
    
            # Since this module gets imported in the application's root package,
            # it cannot import models from other applications at the module level,
