@@ -88,6 +88,7 @@ Test Clinician Login Credentials:
       ```
       
 5. *Install dependencies:*
+    *and 
       ```sh
       pip install -r requirements.txt
       ```
