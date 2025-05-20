@@ -87,7 +87,7 @@ requests-toolbelt==1.0.0
 responses==0.25.3
 schedule==1.2.2
 screen==1.0.1
-setuptools==58.1.0
+setuptools==78.1.1
 six==1.16.0
 social-auth-app-django==5.2.0
 social-auth-core==4.4.2
