@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static './styles/general_home.css' %}" type="text/css">
     <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
     <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
-    <title>Clinicians Login</title>
+    <title>Life Prescriber Staff Access</title>
 </head>
 
 <body>
@@ -48,7 +48,7 @@
                         </div>
                         <div class="back-link-btn">
                             <p>
-                                <a href="{% url 'prescription:custom_home' %}">Go to Login</a>
+                                <a href="{% url 'prescription:custom_login' %}">Clinician Dashboard <i class="fa-solid fa-chevron-right"></i></a>
                             </p>
                         </div>
                     </div>
@@ -75,16 +75,27 @@
                     </div>
                 </div>
                 <div class="fixed-notification-tabs">
+                    {% if portal_type == "hospital" or not portal_type %}
                     <div class="tab-box">
                         <a href="{% url 'prescription:secret_search' clinic_timer_token %}">
                             Hospital Portal
                         </a>
                     </div>
+                    {% endif %}
+                    {% if portal_type == "pharmacy" or not portal_type %}
                     <div class="tab-box">
                         <a href="{% url 'prescription:secret_add_user' pharmacy_timer_token %}">
                             Pharmacy Portal
                         </a>
                     </div>
+                    {% endif %}
+                    {% if user_role == "head" %}
+                    <div class="tab-box">
+                        <a href="{% url 'prescription:staff_invite' invite_timer_token %}">
+                            Invite Staff
+                        </a>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>

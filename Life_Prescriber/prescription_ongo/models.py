@@ -74,12 +74,16 @@ class Prescribe(models.Model):
 
 # Create your models here.
 class ClinicUser(AbstractUser):
-    # overwrite the first_name, last_name, and email field
+    PORTAL_CHOICES = [("hospital", "Hospital"), ("pharmacy", "Pharmacy")]
+    ROLE_CHOICES = [("head", "Head"), ("staff", "Staff")]
+
     first_name = models.CharField(max_length=300, blank=False)
     last_name = models.CharField(max_length=300, blank=False)
     email = models.EmailField(blank=False, unique=True)
     designation = models.CharField(max_length=300, null=True)
     medical_institution = models.CharField(max_length=500, null=True)
+    portal_type = models.CharField(max_length=20, choices=PORTAL_CHOICES, null=True, blank=True)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="staff")
 
     # Define groups and user_permissions with unique related_name arguments
     groups = models.ManyToManyField('auth.Group', related_name='clinic_user_groups')
@@ -88,6 +92,18 @@ class ClinicUser(AbstractUser):
     class Meta:
         verbose_name = "Clinic User"
         verbose_name_plural = "Clinic Users"
+
+
+class StaffInvite(models.Model):
+    ROLE_CHOICES = [("head", "Head"), ("staff", "Staff")]
+
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    invited_email = models.EmailField()
+    medical_institution = models.CharField(max_length=500)
+    portal_type = models.CharField(max_length=20)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="staff")
+    used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 class Insurance(models.Model):
     INSURANCE_CHOICES = [

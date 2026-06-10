@@ -9,7 +9,7 @@
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import Patient, ClinicUser, Insurance, Prescribe
+from .models import Patient, ClinicUser, Insurance, Prescribe, StaffInvite
 
 class PatientAdmin(UserAdmin):
     fieldsets = (
@@ -37,7 +37,7 @@ class ClinicUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Extra Personal info', {'fields': ('designation', 'medical_institution')}),
+        ('Institution info', {'fields': ('designation', 'medical_institution', 'portal_type', 'role')}),
         ('Permissions', {
             'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions'),
         }),
@@ -46,13 +46,20 @@ class ClinicUserAdmin(UserAdmin):
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'password1', 'password2', 'designation', 'medical_institution'),
+            'fields': ('username', 'password1', 'password2', 'designation', 'medical_institution', 'portal_type', 'role'),
         }),
     )
 
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff')
-    search_fields = ('username', 'first_name', 'last_name', 'email')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'portal_type', 'role')
+    search_fields = ('username', 'first_name', 'last_name', 'email', 'medical_institution')
+    list_filter = ('portal_type', 'role')
     ordering = ('username',)
+
+
+class StaffInviteAdmin(admin.ModelAdmin):
+    list_display = ('invited_email', 'medical_institution', 'portal_type', 'role', 'used', 'created_at')
+    list_filter = ('portal_type', 'role', 'used')
+    search_fields = ('invited_email', 'medical_institution')
 
 class InsuranceAdmin(admin.ModelAdmin):
     list_display = ('insurance_name', )
@@ -69,3 +76,4 @@ admin.site.register(Prescribe, PrescribeAdmin)
 admin.site.register(Insurance, InsuranceAdmin)
 admin.site.register(Patient, PatientAdmin)
 admin.site.register(ClinicUser, ClinicUserAdmin)
+admin.site.register(StaffInvite, StaffInviteAdmin)

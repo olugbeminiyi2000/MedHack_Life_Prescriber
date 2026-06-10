@@ -24,12 +24,10 @@ cssselect==1.2.0
 decorator==4.4.2
 defusedxml==0.7.1
 Django==4.2.7
-django-admin==2.0.2
 django-celery==3.1.17
 django-celery-beat==2.6.0
 django-celery-results==2.5.1
 django-crispy-forms==2.0
-django-excel-response2==3.0.6
 django-extensions==3.2.3
 django-filter==23.2
 django-guardian==2.4.0
@@ -39,11 +37,9 @@ django-taggit==4.0.0
 django-timezone-field==6.1.0
 django-widget-tweaks==1.5.0
 djangorestframework==3.14.0
-excel-base==1.0.4
 exceptiongroup==1.2.1
 frozenlist==1.4.1
 future==1.0.0
-huepy==1.2.1
 idna==3.4
 imageio==2.34.1
 imageio-ffmpeg==0.5.1
@@ -61,7 +57,6 @@ oauthlib==3.2.2
 packaging==24.1
 phonenumbers==8.13.39
 pillow==10.3.0
-pip==24.1
 pluggy==1.5.0
 proglog==0.1.10
 prompt_toolkit==3.0.47
@@ -86,7 +81,6 @@ requests-oauthlib==1.3.1
 requests-toolbelt==1.0.0
 responses==0.25.3
 schedule==1.2.2
-screen==1.0.1
 setuptools==58.1.0
 six==1.16.0
 social-auth-app-django==5.2.0
@@ -105,4 +99,6 @@ wcwidth==0.2.13
 xlwt==1.3.0
 yarl==1.9.4
 zipp==3.15.0
+gunicorn==23.0.0
+whitenoise==6.11.0
 

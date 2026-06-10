@@ -31,4 +31,8 @@ urlpatterns = [
     # patient user auths
     path('secret_search/<str:timer_token>', views.HospitalSecretSearch.as_view(), name="secret_search"),
     path('secret_signup/<str:timer_token>', views.HospitalSecretSignUp.as_view(), name="secret_signup"),
+
+    # staff invite flow
+    path('staff_invite/<str:timer_token>', views2.GenerateStaffInviteView.as_view(), name="staff_invite"),
+    path('staff_register/<uuid:invite_token>', views2.StaffSelfRegisterView.as_view(), name="staff_register"),
 ]

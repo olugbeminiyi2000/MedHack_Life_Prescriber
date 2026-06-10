@@ -196,9 +196,26 @@ input {
     }
 }
 
-#sigin_custom:hover {
+#signin_custom:hover {
     cursor: pointer;
     background-color: rgba(0, 0, 0, 0.8);
+}
+
+.back-link-btn {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.back-link-btn a {
+    text-decoration: none;
+    color: #ffa500;
+    font-size: 1rem;
+}
+
+.back-link-btn a:hover {
+    text-decoration: underline;
+    color: #c07d02;
 }
 
 /* Message styling */

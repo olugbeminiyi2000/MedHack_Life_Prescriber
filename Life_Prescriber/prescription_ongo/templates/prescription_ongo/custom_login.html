@@ -3,11 +3,12 @@
 
 <head>
     {% load static %}
-    <title>Login</title>
+    <title>Clinician Dashboard Login</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <link rel="stylesheet" href="{% static './styles/custom_login.css' %}" />
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
     <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}" />
 </head>
 
@@ -21,7 +22,7 @@
         </div>
         <div class="form-elements">
             <h2>Welcome to <span>Life Prescriber™</span></h2>
-            <p><span>...your medication on the go!</span></p>
+            <p><span>Clinician Dashboard — manage prescriptions and patient records</span></p>
         </div>
         {% if error_message %}
         <div class="Error">
@@ -53,6 +54,9 @@
             </div>
 
         </form>
+        <div class="back-link-btn">
+            <a href="{% url 'prescription:general_home' %}"><i class="fa-solid fa-chevron-left"></i> Back to Home</a>
+        </div>
     </div>
 </body>
 <script>

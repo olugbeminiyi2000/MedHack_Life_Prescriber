@@ -37,12 +37,8 @@ main {
     justify-content: flex-start;
     align-items: center;
     min-width: 100vw;
-    min-height: 60vh;
     background: rgb(255, 255, 255);
-    /* backdrop-filter: blur(10px);
-    border-top-right-radius: 40%; */
-    padding: 2rem 0;
-
+    padding: 1rem 0;
 }
 
 .main-form .logo-image {
@@ -96,8 +92,6 @@ main {
     border-radius: 5px;
     background-color: #0c81bb;
     position: absolute;
-    top: 10px;
-    left: 16px;
     transition: all 0.3s ease-in-out;
 }
 
@@ -118,11 +112,27 @@ main {
     min-height: 10rem;
 }
 
+.back-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.8rem;
+}
+
+.back-nav a {
+    text-decoration: none;
+    color: #ffa500;
+    font-size: 0.95rem;
+}
+
+.back-nav a:hover {
+    text-decoration: underline;
+    color: #c07d02;
+}
+
 .forms-div {
     display: flex;
     flex-direction: column;
     width: 70%;
-    min-height: 50rem;
     align-items: center;
 }
 
@@ -171,8 +181,9 @@ lord-icon {
     justify-content: center;
     align-items: center;
     width: 100%;
-    padding-top: 3rem;
+    padding-top: 1rem;
 }
+
 
 .form-group {
     min-width: 20rem;
@@ -207,7 +218,7 @@ lord-icon {
 }
 
 .main-form .form-group {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     animation: fadeInUp 1s ease-in-out;
 }
 

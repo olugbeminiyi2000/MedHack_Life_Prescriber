@@ -6,58 +6,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Link Invalid or Expired</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
     <style>
         * {
-            font-family: "Poppins", sans-serif;
-            font-weight: 400;
-            font-style: normal;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "League Spartan", sans-serif;
         }
 
         body {
-            font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .container {
             text-align: center;
-        }
-
-        .message-box {
             background-color: #ffffff;
-            border: 1px solid #ddd;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            border-radius: 12px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            max-width: 480px;
+            width: 90%;
         }
 
-        .message-box h1 {
-            color: #dc3545;
+        .container h1 {
+            color: #a52a2a;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
         }
 
-        .message-box p {
-            color: #6c757d;
+        .container p {
+            color: #555;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #ffa500;
+            font-size: 1rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+            color: #c07d02;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="message-box">
-            <h1>Invalid or Expired Link</h1>
-            <p>The link you have used is invalid or has expired. Please request a new link or contact support.</p>
-        </div>
+        <h1>Invalid or Expired Link</h1>
+        <p>The link you have used is invalid or has expired. Please request a new link or contact support.</p>
+        <a href="{% url 'prescription:general_home' %}" class="back-link"><i class="fa-solid fa-chevron-left"></i> Back to Home</a>
     </div>
 </body>
 

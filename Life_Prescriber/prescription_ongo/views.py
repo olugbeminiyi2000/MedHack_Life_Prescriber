@@ -835,11 +835,15 @@ class GeneralHomeView(View):
         if request.session.get("clinicial_found_msg", None):
             clinic_timer_token = generate_secret_url("secret_search")
             pharmacy_timer_token = generate_secret_url("secret_add_user")
+            invite_timer_token = generate_secret_url("staff_invite")
 
             context["success_message"] = request.session["clinicial_found_msg"]
             context["clinic_timer_token"] = clinic_timer_token
             context["pharmacy_timer_token"] = pharmacy_timer_token
-            
+            context["invite_timer_token"] = invite_timer_token
+            context["portal_type"] = request.session.get("clinic_user_portal_type")
+            context["user_role"] = request.session.get("clinic_user_role", "staff")
+
             del request.session["clinicial_found_msg"]
         elif request.session.get("error_message", None):
             context["error_message"] = request.session["error_message"]
@@ -851,29 +855,23 @@ class GeneralHomeView(View):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        # get the username_email and password first
         username_or_email = request.POST.get("username_or_email")
         password = request.POST.get("password")
 
-        print(username_or_email, password)
-
-        # now we have to authenticate using our already defined CustomBackend class
         authenticate_user = authenticate(
                 request,
                 username_or_email=username_or_email,
                 password=password,
         )
-        print(authenticate_user)
         if authenticate_user is not None:
-            # check to see that custom user is not active
-            # then make the user active
             if authenticate_user.is_active:
-                # display a flash message for successful clinicial found
                 messages.success(request, "Clinician Verified ✔")
                 request.session["clinicial_found_msg"] = "clinicial found"
+                request.session["clinic_user_portal_type"] = authenticate_user.portal_type
+                request.session["clinic_user_role"] = authenticate_user.role
+                request.session["clinic_user_institution"] = authenticate_user.medical_institution
                 return redirect(request.path)
             else:
-                # redirect to the user has been blocked
                 return redirect(reverse("prescription:custom_ban"))
         else:
             request.session["error_message"] = "Username, Email, or Password is wrong and all are case sensitive "

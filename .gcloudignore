@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.git/
+.gitignore
+Life_Prescriber/db.sqlite3
+Life_Prescriber/staticfiles/

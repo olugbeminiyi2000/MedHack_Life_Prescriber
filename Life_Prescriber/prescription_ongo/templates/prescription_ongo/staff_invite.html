@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invite Staff</title>
+    <link rel="icon" type="image/png" href="{% static './images/logo_placeholder.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/95cc5340fb.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "League Spartan", sans-serif; }
+
+        body {
+            background-color: #0c81bb;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            max-width: 460px;
+            width: 100%;
+        }
+
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-row img { width: 40px; height: 40px; }
+
+        .logo-row span {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0c81bb;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: #222;
+            margin-bottom: 0.4rem;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1.8rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.65rem 0.9rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: "League Spartan", sans-serif;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .form-group select {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%230c81bb' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            cursor: pointer;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0c81bb;
+            box-shadow: 0 0 0 3px rgba(12, 129, 187, 0.12);
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: #0c81bb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            font-family: "League Spartan", sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+        }
+
+        .submit-btn:hover { background-color: #0a6fa3; }
+
+        .success-msg {
+            background: #e6f7ee;
+            border: 1px solid #0ca04a;
+            color: #0ca04a;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .error-msg {
+            background: #fdecea;
+            border: 1px solid #a52a2a;
+            color: #a52a2a;
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.2rem;
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.2rem;
+            color: #ffa500;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .back-link:hover { text-decoration: underline; color: #c07d02; }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="logo-row">
+            <img src="{% static './images/logo_placeholder.png' %}" alt="Life Prescriber">
+            <span>Life Prescriber™</span>
+        </div>
+
+        <h2>Invite Staff Member</h2>
+        <p class="subtitle">
+            Enter the email address of the person you want to invite. They will receive a link to register themselves.
+        </p>
+
+        {% if invite_sent_msg %}
+        <div class="success-msg"><i class="fa-solid fa-circle-check"></i> {{ invite_sent_msg }}</div>
+        {% endif %}
+
+        {% if form.invited_email.errors %}
+        <div class="error-msg">{{ form.invited_email.errors }}</div>
+        {% endif %}
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.invited_email.label_tag }}
+                {{ form.invited_email }}
+            </div>
+            <div class="form-group">
+                {{ form.role.label_tag }}
+                {{ form.role }}
+            </div>
+            <button type="submit" class="submit-btn">
+                Send Invite <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+
+        <a href="{% url 'prescription:general_home' %}" class="back-link">
+            <i class="fa-solid fa-chevron-left"></i> Back to Home
+        </a>
+    </div>
+</body>
+
+</html>

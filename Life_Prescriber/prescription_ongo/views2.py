@@ -6,9 +6,10 @@ from django.views import View
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from .forms2 import ClinicUserLoginForm, ClinicUserCreationForm
+from .forms2 import ClinicUserLoginForm, ClinicUserCreationForm, StaffInviteForm, StaffSelfRegisterForm
 from .forms import SecretInsuranceRegisterForm
-from .models import ClinicUser, Patient, Prescribe
+from .models import ClinicUser, Patient, Prescribe, StaffInvite
+from django.utils import timezone
 from .forms3 import ClinicUserPasswordCheck, ClinicUserPasswordResetForm, ClinicUserSetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -368,6 +369,8 @@ class SecretClinicUserAdd(View):
             email=user_email,
             designation=user_designation.capitalize(),
             medical_institution=user_medical_institution.capitalize(),
+            portal_type=request.session.get("clinic_user_portal_type"),
+            role="staff",
             password=user_password,
         )
 
@@ -527,6 +530,132 @@ class UserPrescription(View):
 
             context_dict["all_prescriptions"] = all_prescriptions
             return render(request, self.template_name, context_dict)
-                
+
         login_url = reverse("prescription:custom_login")
         return redirect(login_url)
+
+
+class GenerateStaffInviteView(View):
+    template_name = "prescription_ongo/staff_invite.html"
+    template_expired = "prescription_ongo/general_link_expired.html"
+
+    def get(self, request, timer_token):
+        try:
+            SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_expired)
+
+        if request.session.get("clinic_user_role") != "head":
+            request.session["error_message"] = "Only institution heads can invite staff."
+            return redirect(reverse("prescription:general_home"))
+
+        context = {"timer_token": timer_token, "form": StaffInviteForm()}
+        if request.session.get("invite_sent_msg"):
+            context["invite_sent_msg"] = request.session.pop("invite_sent_msg")
+        return render(request, self.template_name, context)
+
+    def post(self, request, timer_token):
+        try:
+            SIGNER_2.unsign(timer_token, max_age=timedelta(minutes=3))
+        except (BadSignature, SignatureExpired):
+            return render(request, self.template_expired)
+
+        if request.session.get("clinic_user_role") != "head":
+            request.session["error_message"] = "Only institution heads can invite staff."
+            return redirect(reverse("prescription:general_home"))
+
+        form = StaffInviteForm(request.POST)
+        new_timer_token = generate_secret_url("staff_invite")
+
+        if not form.is_valid():
+            return render(request, self.template_name, {"timer_token": new_timer_token, "form": form})
+
+        invited_email = form.cleaned_data["invited_email"]
+        institution = request.session.get("clinic_user_institution", "")
+        portal_type = request.session.get("clinic_user_portal_type", "")
+
+        invite = StaffInvite.objects.create(
+            invited_email=invited_email,
+            medical_institution=institution,
+            portal_type=portal_type,
+            role=form.cleaned_data["role"],
+        )
+
+        if settings.DEBUG:
+            site_url = os.getenv("LOCAL_HOST", "http://127.0.0.1:8000")
+        else:
+            site_url = os.getenv("WEB_HOST", "")
+
+        register_url = f"{site_url}/prescription_ongo/staff_register/{invite.token}"
+
+        subject = "You have been invited to join Life Prescriber"
+        message = (
+            f"You have been invited to register as staff at {institution}.\n\n"
+            f"Click the link below to complete your registration (expires in 24 hours):\n{register_url}\n\n"
+            f"If you did not expect this invite, ignore this email."
+        )
+        send_mail(subject, message, "obolo.emmanuel31052000@gmail.com", [invited_email])
+
+        request.session["invite_sent_msg"] = f"Invite sent to {invited_email}."
+        return redirect(reverse("prescription:staff_invite", args=[new_timer_token]))
+
+
+class StaffSelfRegisterView(View):
+    template_name = "prescription_ongo/staff_register.html"
+
+    def _get_valid_invite(self, invite_token):
+        try:
+            invite = StaffInvite.objects.get(token=invite_token)
+        except StaffInvite.DoesNotExist:
+            return None, "invalid"
+        if invite.used:
+            return None, "used"
+        if timezone.now() - invite.created_at > timedelta(hours=24):
+            return None, "expired"
+        return invite, None
+
+    def get(self, request, invite_token):
+        invite, error = self._get_valid_invite(invite_token)
+        if error == "used":
+            return render(request, "prescription_ongo/prescribe_link_used.html")
+        if error:
+            return render(request, "prescription_ongo/link_expired.html")
+        return render(request, self.template_name, {"form": StaffSelfRegisterForm(), "invite": invite})
+
+    def post(self, request, invite_token):
+        invite, error = self._get_valid_invite(invite_token)
+        if error == "used":
+            return render(request, "prescription_ongo/prescribe_link_used.html")
+        if error:
+            return render(request, "prescription_ongo/link_expired.html")
+
+        form = StaffSelfRegisterForm(request.POST)
+        if not form.is_valid():
+            return render(request, self.template_name, {"form": form, "invite": invite})
+
+        # Enforce email matches invite — prevents someone else using an intercepted link
+        if form.cleaned_data["email"] != invite.invited_email:
+            form.add_error("email", "Please use the email address the invite was sent to.")
+            return render(request, self.template_name, {"form": form, "invite": invite})
+
+        if ClinicUser.objects.filter(email=form.cleaned_data["email"]).exists():
+            form.add_error("email", "A staff account with this email already exists.")
+            return render(request, self.template_name, {"form": form, "invite": invite})
+
+        ClinicUser.objects.create_user(
+            first_name=form.cleaned_data["first_name"].capitalize(),
+            last_name=form.cleaned_data["last_name"].capitalize(),
+            username=form.cleaned_data["username"],
+            email=form.cleaned_data["email"],
+            designation=(form.cleaned_data.get("designation") or "").capitalize(),
+            medical_institution=invite.medical_institution,
+            portal_type=invite.portal_type,
+            role=invite.role,
+            password=form.cleaned_data["password1"],
+        )
+
+        invite.used = True
+        invite.save()
+
+        request.session["invite_register_success"] = "Registration successful. You can now log in."
+        return redirect(reverse("prescription:general_home"))

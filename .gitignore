@@ -1,1 +1,4 @@
 Life_Prescriber/Life_Prescriber/settings.py
+Life_Prescriber/.env
+.env
+venv/
