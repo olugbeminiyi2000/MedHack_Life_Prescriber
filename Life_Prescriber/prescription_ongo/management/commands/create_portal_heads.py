@@ -27,6 +27,27 @@ class Command(BaseCommand):
             portal_type="pharmacy",
             password=os.getenv("PHARMACY_HEAD_PASSWORD", ""),
         )
+        # Public demo accounts — fixed credentials shown in portfolio
+        self._create(
+            username="hospital_head",
+            email="hospital@lifeprescriber.com",
+            first_name="Demo",
+            last_name="Hospital",
+            designation="Doctor",
+            institution="General Hospital",
+            portal_type="hospital",
+            password="sitdownhere",
+        )
+        self._create(
+            username="pharmacy_head",
+            email="pharmacy@lifeprescriber.com",
+            first_name="Demo",
+            last_name="Pharmacy",
+            designation="Pharmacist",
+            institution="Central Pharmacy",
+            portal_type="pharmacy",
+            password="sitdownhere",
+        )
 
     def _create(self, username, email, first_name, last_name,
                 designation, institution, portal_type, password):
@@ -45,7 +66,7 @@ class Command(BaseCommand):
             first_name=first_name.capitalize(),
             last_name=last_name.capitalize(),
             designation=designation.capitalize(),
-            medical_institution=institution.capitalize(),
+            medical_institution=institution,
             portal_type=portal_type,
             role="head",
             password=password,
