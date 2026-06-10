@@ -17,7 +17,4 @@ RUN DJANGO_SECRET_KEY=build-placeholder \
 
 EXPOSE 8080
 
-CMD ["gunicorn", "Life_Prescriber.wsgi:application", \
-     "--bind", "0.0.0.0:8080", \
-     "--workers", "2", \
-     "--timeout", "120"]
+CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py create_portal_heads && gunicorn Life_Prescriber.wsgi:application --bind 0.0.0.0:8080 --workers 2 --timeout 120"]
