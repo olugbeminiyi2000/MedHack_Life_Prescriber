@@ -71,12 +71,9 @@ class PrescribeView(View):
                 login_url = reverse("prescription:custom_login")
                 return redirect(login_url)
 
-            """
-            If both case come out False render the prescription form
-            will add some context soon.
-            """
-            # use the prescription_id to get the prescription
-            # and then get the username and drug_name
+            if request.user.portal_type != "pharmacy":
+                return redirect(reverse("prescription:general_home"))
+
             user_prescription= Prescribe.objects.filter(
                 id=prescription_id,
             ).first()
@@ -108,6 +105,9 @@ class PrescribeView(View):
         return redirect(login_url)
 
     def post(self, request, prescription_id):
+        if not request.user.is_authenticated or not isinstance(request.user, ClinicUser) or request.user.portal_type != "pharmacy":
+            return redirect(reverse("prescription:custom_login"))
+
         context_variable = None
         periods = ["am", "pm"]
         get_username_from_post = request.POST.get("username")
@@ -120,66 +120,58 @@ class PrescribeView(View):
             context_variable = send_back_error_with_previous_data(request, "This patient username doesn't exist.")
             context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
-        
+
         get_prescribe_time_from_post = request.POST.get("prescribe_time")
         if len(get_prescribe_time_from_post) > 4:
             context_variable = send_back_error_with_previous_data(request, "prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am.")
             context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
-        
-        # check if the first or first two characters can be converted to int
+
         try:
             try_convert = int(get_prescribe_time_from_post[0:2]) if len(get_prescribe_time_from_post) == 4 else int(get_prescribe_time_from_post[0])
         except ValueError:
                 context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
                 context_variable["patient_id"] = patient_id
                 return render(request, self.template_name, context_variable)
-        
-        # check if the last 2 characters is am or pm
+
         period_value = get_prescribe_time_from_post[-2: ]
         if period_value.lower() not in periods:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
             context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
-        
-        #  check if the try convert is between a range
+
         if not 1 <= try_convert <= 12:
             context_variable = send_back_error_with_previous_data(request, f"prescribe time should be in this form <time><am|pm> and  between range 1 to 12  e.g 08am or 08pm or 8pm or 8am, inputed {get_prescribe_time_from_post}.")
             context_variable["patient_id"] = patient_id
-            return render(request, self.template_name, context_variable)  
-                
-        # now save all the data for the patient prescription
+            return render(request, self.template_name, context_variable)
+
         if period_value.lower() == "am":
             start = 0 if try_convert == 12 else try_convert
             hour = 12 + 12 - 1 if try_convert == 12 else try_convert - 1
         else:
             start = 0 + try_convert if try_convert == 12 else try_convert + 12
             hour = 0 + 12 - 1 if try_convert == 12 else try_convert + 12 - 1
-            
-        first_time = time(hour=start, minute=0) # time the user takes drug
-        prescribe_time = time(hour=hour, minute=50) # time notifications are sent
+
+        first_time = time(hour=start, minute=0)
+        prescribe_time = time(hour=hour, minute=50)
         drug_name = request.POST.get("drug_name")
         total_tablets =  request.POST.get("total_tablets")
         no_of_times_per_day =  request.POST.get("no_of_times_per_day")
         no_of_tablets_per_use =  request.POST.get("no_of_tablets_per_use")
         general_description =  request.POST.get("general_description")
 
-
-        # calculate the initial_proposed_date, recent_proposed_date, start_time
         start_time = datetime.now()
 
-        #TODO check this calculation for zero division error
         try:
             total_days = math.ceil(int(total_tablets) / (int(no_of_times_per_day) * int(no_of_tablets_per_use)))
         except ZeroDivisionError:
             context_variable = send_back_error_with_previous_data(request, "Invalid entry no_of_times_per_day or no_of_tablets_per_use cannot be 0.")
             context_variable["patient_id"] = patient_id
             return render(request, self.template_name, context_variable)
-                 
+
         initial_proposed_date = start_time + timedelta(total_days - 1)
         recent_proposed_date = initial_proposed_date
 
-        # check if the drug exist if it does just update rather than create new one 
         check_prescription_exists = Prescribe.objects.filter(
             prescribed_user=check_username_exist.first(),
             drug_name=drug_name.lower()
@@ -200,10 +192,9 @@ class PrescribeView(View):
                 no_of_times_per_day=no_of_times_per_day,
                 no_of_tablets_per_use=no_of_tablets_per_use,
                 general_description=general_description,
-                reverse_value=0               
+                reverse_value=0
             )
         else:
-            # save prescription
             Prescribe.objects.create(
                 prescribed_user=check_username_exist.first(),
                 drug_name=drug_name.lower(),
@@ -219,9 +210,7 @@ class PrescribeView(View):
                 general_description=general_description,
                 reverse_value=0
             )
-        
-        # do a post redirect get request PRGR
-        # but before it save a success message to the session
+
         request.session["success_message"] = "Drug prescription has been updated successfully."
         return redirect(request.path)
 
@@ -288,17 +277,17 @@ class ChangePrescribeView(View):
             """
             if not isinstance(request.user, ClinicUser):
                 login_url = reverse("prescription:custom_login")
-                return redirect(login_url)      
-            """
-            If both case come out False render the prescription form
-            will add some context soon.
-            """
+                return redirect(login_url)
+
+            if request.user.portal_type != "pharmacy":
+                return redirect(reverse("prescription:general_home"))
+
             user_prescription= Prescribe.objects.filter(
                 id=prescription_id,
             ).first()
 
             context_variable = {}
-    
+
             if user_prescription:
                 patient_data = {
                     "username": user_prescription.prescribed_user.username,
@@ -311,7 +300,7 @@ class ChangePrescribeView(View):
             else:
                 patient_data = {}
                 prescribe_data = {}
-            
+
             patient_form, prescribe_form = PatientForm(patient_data), PrescribeForm(prescribe_data)
             context_variable["patient_form"] = patient_form
             context_variable["prescribe_form"] = prescribe_form
@@ -319,11 +308,14 @@ class ChangePrescribeView(View):
                 context_variable["success_message"] = request.session["success_message"]
                 del request.session["success_message"]
             return render(request, self.template_name, context_variable)
-        
+
         login_url = reverse("prescription:custom_login")
         return redirect(login_url)
-    
+
     def post(self, request, prescription_id):
+        if not request.user.is_authenticated or not isinstance(request.user, ClinicUser) or request.user.portal_type != "pharmacy":
+            return redirect(reverse("prescription:custom_login"))
+
         get_username_from_post = request.POST.get("username")
         check_username_exist = Patient.objects.filter(
             username=get_username_from_post,
@@ -676,11 +668,9 @@ class NewPrescribeView(View):
                 login_url = reverse("prescription:custom_login")
                 return redirect(login_url)
 
-            """
-            If both case come out False render the prescription form
-            will add some context soon.
-            """
-            # use patient_id to get patient
+            if request.user.portal_type != "pharmacy":
+                return redirect(reverse("prescription:general_home"))
+
             context_variable = {}
             patient = Patient.objects.filter(
                 id=patient_id
@@ -707,6 +697,9 @@ class NewPrescribeView(View):
         return redirect(login_url)
 
     def post(self, request, patient_id):
+        if not request.user.is_authenticated or not isinstance(request.user, ClinicUser) or request.user.portal_type != "pharmacy":
+            return redirect(reverse("prescription:custom_login"))
+
         context_variable = None
         periods = ["am", "pm"]
         get_username_from_post = request.POST.get("username")

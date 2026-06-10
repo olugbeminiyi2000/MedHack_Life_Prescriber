@@ -70,10 +70,6 @@ class CustomHome(View):
                 login_url = reverse("prescription:custom_login")
                 return redirect(login_url)
 
-            """
-            If both case come out False render the custom home page
-            will add some context soon.
-            """
             context = {}
             
             if request.session.get("error_msg", None):
@@ -98,6 +94,7 @@ class CustomHome(View):
             custom_logged_user = request.user
             context["insurance_form"] = insurance_form
             context["custom_logged_user"] = custom_logged_user
+            context["portal_type"] = request.user.portal_type
             return render(request, self.template_name, context)
         login_url = reverse("prescription:custom_login")
         return redirect(login_url)
@@ -135,23 +132,11 @@ class CustomLogin(View):
             if authenticate_user.is_active:
                 # log the custom user in
                 login(request, authenticate_user)
-                # display a flash message for successful login
                 messages.success(request, "Clinician logged in...😎")
-                
-                # TODO: make sure you do what is in the docstring
-                """
-                before you redirect custom_home add cookies to it.
-                session cookies, and time period cookies.
-                """
-                response = redirect("/site/home.html")
 
-                # set seesion cookie that will expire if browser is closed
+                response = redirect(reverse("prescription:custom_home"))
                 response.set_cookie("custom_session", "session_cookie", max_age=None)
-
-                #set time cookie that will expire after about 2hours in seconds
                 response.set_cookie("custom_time", "time_cookie", max_age=7200)
-
-                # redirect the custom user to the custom_home
                 return response
             else:
                 # redirect to the user has been blocked
@@ -441,6 +426,9 @@ class PharmacySecretSearch(View):
         return redirect("prescription:custom_home")
     
     def post(self, request):
+        if not request.user.is_authenticated or not isinstance(request.user, ClinicUser):
+            return redirect(reverse("prescription:custom_login"))
+
         get_insurance_name = request.POST.get("insurance_name")
         get_insurance_number = request.POST.get("insurance_number")
 
@@ -501,8 +489,9 @@ class UserPrescription(View):
             if not isinstance(request.user, ClinicUser):
                 login_url = reverse("prescription:custom_login")
                 return redirect(login_url)
-            
+
             context_dict = {}
+            context_dict["portal_type"] = request.user.portal_type
             # get the patient first then get the prescription(s) for that patient
             patient = Patient.objects.filter(
                 id=patient_id,

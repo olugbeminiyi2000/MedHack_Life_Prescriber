@@ -29,10 +29,12 @@
                     <input type="text" name="drug-search" id="search-box"
                         placeholder="search">
                 </div>
+                {% if portal_type == "pharmacy" %}
                 <button class="new-prescription-btn">
                     <a href="{% url 'prescription:new_prescribe' patient.id %}">Add New<i
                             class="fa-solid fa-plus"></i></a>
                 </button>
+                {% endif %}
             </div>
         </div>
         <div class="prescriptions">
@@ -89,17 +91,17 @@
                     </div>
 
                 </div>
+                {% if portal_type == "pharmacy" %}
                 <div class="actions">
                     {% if prescription.total_tablets_dynamic == 0 %}
                     <a href="{% url 'prescription:prescribe' prescription.id %}" class="edit-btn"><i
-                            class="fa-solid fa-pen-to-square"></i></a> <!--Make new prescription (from old) -->
+                            class="fa-solid fa-pen-to-square"></i></a>
                     {% else %}
                     <a href="{% url 'prescription:change_prescribe' prescription.id %}" class="edit-btn"><i
-                            class="fa-solid fa-pen-to-square"></i></a> <!--Change Old prescription (from
-                    old) -->
+                            class="fa-solid fa-pen-to-square"></i></a>
                     {% endif %}
-                    <!-- <button class="edit-btn">Edit</button> -->
                 </div>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -113,9 +115,11 @@
     {% elif patient and not all_prescriptions %}
     <div class="not-found">
         <p>No Prescription(s) found for this user</p>
+        {% if portal_type == "pharmacy" %}
         <button class="new-prescription-btn">
             <a href="{% url 'prescription:new_prescribe' patient.id %}">Add New<i class="fa-solid fa-plus"></i></a>
         </button>
+        {% endif %}
     </div>
     {% else %}
     <div class="btn not-found">
